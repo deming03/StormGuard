@@ -40,7 +40,6 @@ StormGuard addresses the critical challenges of disaster response, resource allo
 - **Routing**: React Router v6
 - **Forms**: React Hook Form with Zod validation
 - **Maps**: Mapbox GL JS with React Map GL
-- **3D Visualization**: COBE globe
 - **Charts**: Chart.js with React integration
 
 ### Backend & Database
