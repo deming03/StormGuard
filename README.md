@@ -1,5 +1,4 @@
-# 🌍 StormGuard
-# by team Sirap Bandung
+# 🌍 StormGuard by team Sirap Bandung
 StormGuard addresses the critical challenges of disaster response, resource allocation, and real-time alerts by combining cutting-edge AI technology with intuitive user interfaces and robust backend infrastructure.
 
 ## 📋 Overview
