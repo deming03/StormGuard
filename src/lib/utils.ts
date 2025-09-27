@@ -160,54 +160,6 @@ export const disasterUtils = {
   }
 }
 
-// Resource type utilities
-export const resourceUtils = {
-  getIcon: (type: ResourceType): string => {
-    switch (type) {
-      case 'hospital':
-        return '🏥'
-      case 'clinic':
-        return '🩺'
-      case 'pharmacy':
-        return '💊'
-      case 'ambulance':
-        return '🚑'
-      case 'blood_bank':
-        return '🩸'
-      case 'medical_supplies':
-        return '🧰'
-      case 'emergency_shelter':
-        return '🏠'
-      default:
-        return '⚕️'
-    }
-  },
-  
-  getDisplayName: (type: ResourceType): string => {
-    return type.charAt(0).toUpperCase() + type.slice(1).replace('_', ' ')
-  },
-  
-  getColor: (type: ResourceType): string => {
-    switch (type) {
-      case 'hospital':
-        return 'bg-red-100 text-red-800'
-      case 'clinic':
-        return 'bg-blue-100 text-blue-800'
-      case 'pharmacy':
-        return 'bg-green-100 text-green-800'
-      case 'ambulance':
-        return 'bg-yellow-100 text-yellow-800'
-      case 'blood_bank':
-        return 'bg-pink-100 text-pink-800'
-      case 'medical_supplies':
-        return 'bg-purple-100 text-purple-800'
-      case 'emergency_shelter':
-        return 'bg-orange-100 text-orange-800'
-      default:
-        return 'bg-gray-100 text-gray-800'
-    }
-  }
-}
 
 // Location utilities
 export const locationUtils = {

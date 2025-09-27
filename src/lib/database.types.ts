@@ -21,8 +21,6 @@ export type DisasterType =
 
 export type DisasterSeverity = 'low' | 'medium' | 'high' | 'critical'
 export type DisasterStatus = 'active' | 'monitoring' | 'resolved' | 'archived'
-export type ResourceType = 'hospital' | 'clinic' | 'pharmacy' | 'ambulance' | 'blood_bank' | 'medical_supplies' | 'emergency_shelter'
-export type ResourceStatus = 'available' | 'busy' | 'unavailable' | 'maintenance'
 export type UserRole = 'citizen' | 'responder' | 'coordinator' | 'admin'
 export type IncidentStatus = 'pending' | 'verified' | 'false_report' | 'resolved'
 
@@ -139,80 +137,6 @@ export interface Database {
           created_at?: string
           updated_at?: string
           resolved_at?: string | null
-        }
-      }
-      medical_resources: {
-        Row: {
-          id: string
-          name: string
-          resource_type: ResourceType
-          description: string | null
-          contact_phone: string | null
-          contact_email: string | null
-          website: string | null
-          capacity: number | null
-          current_availability: number | null
-          status: ResourceStatus
-          location: string // GeoJSON Point as string
-          address: string | null
-          operating_hours: Json | null
-          services_offered: string[] | null
-          equipment_available: string[] | null
-          emergency_contact: string | null
-          verification_documents: string[] | null
-          added_by: string | null
-          verified_by: string | null
-          is_verified: boolean
-          created_at: string
-          updated_at: string
-        }
-        Insert: {
-          id?: string
-          name: string
-          resource_type: ResourceType
-          description?: string | null
-          contact_phone?: string | null
-          contact_email?: string | null
-          website?: string | null
-          capacity?: number | null
-          current_availability?: number | null
-          status?: ResourceStatus
-          location: string
-          address?: string | null
-          operating_hours?: Json | null
-          services_offered?: string[] | null
-          equipment_available?: string[] | null
-          emergency_contact?: string | null
-          verification_documents?: string[] | null
-          added_by?: string | null
-          verified_by?: string | null
-          is_verified?: boolean
-          created_at?: string
-          updated_at?: string
-        }
-        Update: {
-          id?: string
-          name?: string
-          resource_type?: ResourceType
-          description?: string | null
-          contact_phone?: string | null
-          contact_email?: string | null
-          website?: string | null
-          capacity?: number | null
-          current_availability?: number | null
-          status?: ResourceStatus
-          location?: string
-          address?: string | null
-          operating_hours?: Json | null
-          services_offered?: string[] | null
-          equipment_available?: string[] | null
-          emergency_contact?: string | null
-          verification_documents?: string[] | null
-          added_by?: string | null
-          verified_by?: string | null
-          is_verified?: boolean
-          created_at?: string
-          updated_at?: string
         }
       }
       incident_reports: {
@@ -520,8 +444,6 @@ export interface Database {
       disaster_type: DisasterType
       disaster_severity: DisasterSeverity
       disaster_status: DisasterStatus
-      resource_type: ResourceType
-      resource_status: ResourceStatus
       user_role: UserRole
       incident_status: IncidentStatus
     }
@@ -540,9 +462,6 @@ export type Disaster = Database['public']['Tables']['disasters']['Row']
 export type DisasterInsert = Database['public']['Tables']['disasters']['Insert']
 export type DisasterUpdate = Database['public']['Tables']['disasters']['Update']
 
-export type MedicalResource = Database['public']['Tables']['medical_resources']['Row']
-export type MedicalResourceInsert = Database['public']['Tables']['medical_resources']['Insert']
-export type MedicalResourceUpdate = Database['public']['Tables']['medical_resources']['Update']
 
 export type IncidentReport = Database['public']['Tables']['incident_reports']['Row']
 export type IncidentReportInsert = Database['public']['Tables']['incident_reports']['Insert']
@@ -585,9 +504,6 @@ export type DisasterWithLocation = Omit<Disaster, 'location' | 'affected_area'> 
   affected_area?: Polygon
 }
 
-export type MedicalResourceWithLocation = Omit<MedicalResource, 'location'> & {
-  location: Point
-}
 
 export type IncidentReportWithLocation = Omit<IncidentReport, 'location'> & {
   location: Point
@@ -606,7 +522,6 @@ export interface NotificationPreferences {
   push: boolean
   sms: boolean
   disasters: boolean
-  medical_resources: boolean
   team_updates: boolean
   chat_responses: boolean
   severity_filter: DisasterSeverity[]

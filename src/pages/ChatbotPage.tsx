@@ -19,9 +19,9 @@ import {
   Clock,
   RefreshCw,
   AlertTriangle,
-  Heart,
   MapPin,
-  Shield
+  Shield,
+  Navigation
 } from 'lucide-react'
 import { dateUtils } from '@/lib/utils'
 
@@ -47,49 +47,66 @@ const generateAIResponse = async (message: string, language: string, _context: C
 
   const lowerMessage = message.toLowerCase()
 
-  // Emergency/Disaster responses
-  if (lowerMessage.includes('emergency') || lowerMessage.includes('help') || lowerMessage.includes('disaster')) {
-    return language === 'es' 
-      ? "Entiendo que necesitas ayuda de emergencia. He aquí lo que puedes hacer:\n\n1. Si estás en peligro inmediato, llama a los servicios de emergencia locales\n2. Usa nuestro mapa para encontrar recursos médicos cercanos\n3. Reporta incidentes usando nuestra función de informes comunitarios\n\n¿Necesitas ayuda para encontrar recursos específicos?"
-      : "I understand you need emergency help. Here's what you can do:\n\n1. If you're in immediate danger, call local emergency services\n2. Use our map to find nearby medical resources\n3. Report incidents using our community reporting feature\n\n Do you need help finding specific resources?"
+  // Emergency/Flood responses
+  if (lowerMessage.includes('emergency') || lowerMessage.includes('help') || lowerMessage.includes('flood') || lowerMessage.includes('banjir')) {
+    if (language === 'zh') {
+      return "我理解您需要紧急帮助。您可以这样做：\n\n1. 如果您处于即时危险中，请拨打当地紧急服务电话\n2. 使用我们的地图查看附近区域\n3. 使用我们的社区报告功能报告洪水事件\n\n您需要帮助寻找特定资源吗？"
+    } else if (language === 'ms') {
+      return "Saya faham anda memerlukan bantuan kecemasan. Inilah yang boleh anda lakukan:\n\n1. Jika anda dalam bahaya segera, hubungi perkhidmatan kecemasan tempatan\n2. Gunakan peta kami untuk mencari kawasan berhampiran\n3. Laporkan insiden menggunakan ciri pelaporan komuniti kami\n\nAdakah anda memerlukan bantuan mencari sumber tertentu?"
+    } else {
+      return "I understand you need emergency help. Here's what you can do:\n\n1. If you're in immediate danger, call local emergency services\n2. Use our map to find nearby areas\n3. Report flood incidents using our community reporting feature\n\nDo you need help finding specific resources?"
+    }
   }
 
-  // Medical resources
-  if (lowerMessage.includes('hospital') || lowerMessage.includes('medical') || lowerMessage.includes('doctor')) {
-    return language === 'es'
-      ? "Te puedo ayudar a encontrar recursos médicos. Puedes:\n\n1. Usar la sección 'Recursos Médicos' para encontrar hospitales y clínicas cercanas\n2. Filtrar por tipo de servicio (hospital, clínica, farmacia, etc.)\n3. Ver la disponibilidad en tiempo real\n4. Obtener direcciones y información de contacto\n\n¿Buscas algún tipo específico de atención médica?"
-      : "I can help you find medical resources. You can:\n\n1. Use the 'Medical Resources' section to find nearby hospitals and clinics\n2. Filter by service type (hospital, clinic, pharmacy, etc.)\n3. View real-time availability\n4. Get directions and contact information\n\nAre you looking for a specific type of medical care?"
+  // Flood reporting and management
+  if (lowerMessage.includes('flood') || lowerMessage.includes('banjir') || lowerMessage.includes('洪水')) {
+    if (language === 'zh') {
+      return "我可以帮助您进行洪水管理。您可以：\n\n1. 使用'洪水管理'部分查看洪水事件\n2. 按严重程度筛选洪水事件\n3. 查看实时洪水信息\n4. 获取路线和联系信息\n\n您需要特定类型的洪水信息吗？"
+    } else if (language === 'ms') {
+      return "Saya boleh membantu anda dengan pengurusan banjir. Anda boleh:\n\n1. Gunakan bahagian 'Pengurusan Banjir' untuk melihat kejadian banjir\n2. Tapis mengikut tahap keterukan\n3. Lihat maklumat banjir masa nyata\n4. Dapatkan arah dan maklumat hubungan\n\nAdakah anda mencari jenis maklumat banjir tertentu?"
+    } else {
+      return "I can help you with flood management. You can:\n\n1. Use the 'Flood Management' section to view flood incidents\n2. Filter by severity level\n3. View real-time flood information\n4. Get directions and contact information\n\nAre you looking for a specific type of flood information?"
+    }
   }
 
-  // Disaster reporting
-  if (lowerMessage.includes('report') || lowerMessage.includes('incident') || lowerMessage.includes('disaster')) {
-    return language === 'es'
-      ? "Para reportar un incidente o desastre:\n\n1. Ve a la sección 'Reportes' en el menú\n2. Haz clic en 'Reportar Incidente'\n3. Completa el formulario con detalles\n4. Añade fotos o videos si es posible\n5. Proporciona tu ubicación para una respuesta más rápida\n\nTu reporte ayudará a las autoridades a responder más eficazmente. ¿Necesitas ayuda con algún paso específico?"
-      : "To report an incident or disaster:\n\n1. Go to the 'Reports' section in the menu\n2. Click 'Report Incident'\n3. Fill out the form with details\n4. Add photos or videos if possible\n5. Provide your location for faster response\n\nYour report will help authorities respond more effectively. Do you need help with any specific step?"
+  // Flood reporting
+  if (lowerMessage.includes('report') || lowerMessage.includes('incident') || lowerMessage.includes('lapor')) {
+    if (language === 'zh') {
+      return "要报告洪水事件：\n\n1. 转到菜单中的'洪水管理'部分\n2. 点击'报告洪水'\n3. 填写详细信息表格\n4. 如可能，添加照片或视频\n5. 提供您的位置以获得更快响应\n\n您的报告将帮助当局更有效地响应。您需要任何特定步骤的帮助吗？"
+    } else if (language === 'ms') {
+      return "Untuk melaporkan kejadian banjir:\n\n1. Pergi ke bahagian 'Pengurusan Banjir' dalam menu\n2. Klik 'Lapor Banjir'\n3. Isi borang dengan butiran\n4. Tambah foto atau video jika boleh\n5. Berikan lokasi anda untuk respons yang lebih cepat\n\nLaporan anda akan membantu pihak berkuasa bertindak balas dengan lebih berkesan. Adakah anda memerlukan bantuan dengan mana-mana langkah tertentu?"
+    } else {
+      return "To report a flood incident:\n\n1. Go to the 'Flood Management' section in the menu\n2. Click 'Report Flood'\n3. Fill out the form with details\n4. Add photos or videos if possible\n5. Provide your location for faster response\n\nYour report will help authorities respond more effectively. Do you need help with any specific step?"
+    }
   }
 
   // How-to questions
-  if (lowerMessage.includes('how') || lowerMessage.includes('cómo')) {
-    return language === 'es'
-      ? "Estoy aquí para ayudarte a usar DisasterGuard AI. Puedo asistirte con:\n\n• Encontrar recursos médicos cercanos\n• Reportar incidentes y emergencias\n• Entender alertas de desastres\n• Navegar por el sistema\n• Conectarte con equipos de respuesta\n\n¿Con qué te gustaría empezar?"
-      : "I'm here to help you use DisasterGuard AI. I can assist you with:\n\n• Finding nearby medical resources\n• Reporting incidents and emergencies\n• Understanding disaster alerts\n• Navigating the system\n• Connecting with response teams\n\nWhat would you like to start with?"
+  if (lowerMessage.includes('how') || lowerMessage.includes('怎么') || lowerMessage.includes('bagaimana')) {
+    if (language === 'zh') {
+      return "我在这里帮助您使用 DisasterGuard AI。我可以协助您：\n\n• 报告洪水事件和紧急情况\n• 理解洪水警报\n• 导航系统\n• 连接响应团队\n• 智能路线规划\n\n您想从什么开始？"
+    } else if (language === 'ms') {
+      return "Saya di sini untuk membantu anda menggunakan DisasterGuard AI. Saya boleh membantu anda dengan:\n\n• Melaporkan kejadian banjir dan kecemasan\n• Memahami amaran banjir\n• Menavigasi sistem\n• Menghubungkan dengan pasukan respons\n• Perancangan laluan pintar\n\nApa yang anda ingin mulakan?"
+    } else {
+      return "I'm here to help you use DisasterGuard AI. I can assist you with:\n\n• Reporting flood incidents and emergencies\n• Understanding flood alerts\n• Navigating the system\n• Connecting with response teams\n• Smart route planning\n\nWhat would you like to start with?"
+    }
   }
 
   // Default responses by language
   const responses = {
     en: [
-      "I'm here to help you with disaster management and emergency resources. How can I assist you today?",
-      "I can help you find medical resources, report incidents, or answer questions about disaster preparedness. What do you need help with?",
-      "As your AI assistant for DisasterGuard, I'm ready to help with emergency information, resource location, and disaster reporting. How may I help?",
+      "I'm here to help you with flood management and emergency resources. How can I assist you today?",
+      "I can help you report flood incidents, find safe routes, or answer questions about flood preparedness. What do you need help with?",
+      "As your AI assistant for DisasterGuard, I'm ready to help with flood information, route planning, and incident reporting. How may I help?",
     ],
-    es: [
-      "Estoy aquí para ayudarte con la gestión de desastres y recursos de emergencia. ¿Cómo puedo asistirte hoy?",
-      "Puedo ayudarte a encontrar recursos médicos, reportar incidentes o responder preguntas sobre preparación para desastres. ¿Qué necesitas?",
-      "Como tu asistente de IA para DisasterGuard, estoy listo para ayudar con información de emergencia, localización de recursos y reportes de desastres. ¿Cómo puedo ayudar?",
+    zh: [
+      "我在这里帮助您进行洪水管理和紧急资源。今天我如何帮助您？",
+      "我可以帮助您报告洪水事件、寻找安全路线或回答有关洪水预防的问题。您需要什么帮助？",
+      "作为您的 DisasterGuard AI 助手，我准备帮助您获取洪水信息、路线规划和事件报告。我如何帮助您？",
     ],
-    fr: [
-      "Je suis ici pour vous aider avec la gestion des catastrophes et les ressources d'urgence. Comment puis-je vous aider aujourd'hui?",
-      "Je peux vous aider à trouver des ressources médicales, signaler des incidents ou répondre à des questions sur la préparation aux catastrophes. De quoi avez-vous besoin?",
+    ms: [
+      "Saya di sini untuk membantu anda dengan pengurusan banjir dan sumber kecemasan. Bagaimana saya boleh membantu anda hari ini?",
+      "Saya boleh membantu anda melaporkan kejadian banjir, mencari laluan selamat, atau menjawab soalan tentang persediaan banjir. Apa yang anda perlukan?",
+      "Sebagai pembantu AI anda untuk DisasterGuard, saya bersedia membantu dengan maklumat banjir, perancangan laluan, dan pelaporan kejadian. Bagaimana saya boleh membantu?",
     ],
   }
 
@@ -104,7 +121,7 @@ export default function ChatbotPage() {
       {
         id: '1',
         role: 'assistant',
-        content: "Hello! I'm your AI assistant for DisasterGuard. I can help you with emergency resources, disaster reporting, and answer questions about our platform. How can I help you today?",
+            content: "Hello! I'm your AI assistant for DisasterGuard. I can help you with flood management, emergency resources, safe routing, and answer questions about our platform. How can I help you today?",
         timestamp: new Date().toISOString(),
       }
     ],
@@ -185,11 +202,9 @@ export default function ChatbotPage() {
     setChatState(prev => ({ ...prev, currentLanguage: language }))
     
     const welcomeMessages = {
-      en: "I've switched to English. How can I help you with disaster management today?",
-      es: "He cambiado al español. ¿Cómo puedo ayudarte con la gestión de desastres hoy?",
-      fr: "Je suis passé au français. Comment puis-je vous aider avec la gestion des catastrophes aujourd'hui?",
-      zh: "我已切换到中文。今天我如何帮助您进行灾难管理？",
-      ar: "لقد تحولت إلى العربية. كيف يمكنني مساعدتك في إدارة الكوارث اليوم؟",
+      en: "I've switched to English. How can I help you with flood management today?",
+      zh: "我已切换到中文。今天我如何帮助您进行洪水管理？",
+      ms: "Saya telah bertukar kepada Bahasa Melayu. Bagaimana saya boleh membantu anda dengan pengurusan banjir hari ini?",
     }
 
     const message: ChatMessage = {
@@ -212,7 +227,7 @@ export default function ChatbotPage() {
         {
           id: Date.now().toString(),
           role: 'assistant',
-          content: "Chat cleared. How can I help you today?",
+            content: "Chat cleared. How can I help you with flood management today?",
           timestamp: new Date().toISOString(),
         }
       ],
@@ -221,10 +236,10 @@ export default function ChatbotPage() {
   }
 
   const suggestedQuestions = [
-    { text: "Find nearby hospitals", icon: Heart },
-    { text: "How to report an incident?", icon: AlertTriangle },
+    { text: "How to report a flood?", icon: AlertTriangle },
     { text: "Emergency contact numbers", icon: Shield },
-    { text: "Disaster preparedness tips", icon: MapPin },
+    { text: "Flood preparedness tips", icon: MapPin },
+    { text: "Find safe routes", icon: Navigation },
   ]
 
   return (
@@ -247,11 +262,9 @@ export default function ChatbotPage() {
               <SelectValue placeholder="Language" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="en">🇺🇸 English</SelectItem>
-              <SelectItem value="es">🇪🇸 Español</SelectItem>
-              <SelectItem value="fr">🇫🇷 Français</SelectItem>
-              <SelectItem value="zh">🇨🇳 中文</SelectItem>
-              <SelectItem value="ar">🇸🇦 العربية</SelectItem>
+              <SelectItem value="en">English</SelectItem>
+              <SelectItem value="zh">中文</SelectItem>
+              <SelectItem value="ms">Bahasa Melayu</SelectItem>
             </SelectContent>
           </Select>
           
@@ -262,9 +275,9 @@ export default function ChatbotPage() {
         </div>
       </div>
 
-      <div className="grid gap-6 lg:grid-cols-4">
+      <div className="grid gap-6 lg:grid-cols-3">
         {/* Chat Interface */}
-        <Card className="lg:col-span-3">
+        <Card className="lg:col-span-2">
           <CardHeader className="border-b">
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-2">
@@ -353,7 +366,7 @@ export default function ChatbotPage() {
               <div ref={messagesEndRef} />
             </ScrollArea>
 
-            <div className="border-t p-4">
+            <div className="border-t p-4 bg-white">
               <div className="flex space-x-2">
                 <Input
                   ref={inputRef}
@@ -398,11 +411,11 @@ export default function ChatbotPage() {
                   key={index}
                   variant="outline"
                   size="sm"
-                  className="w-full justify-start text-left h-auto p-3"
+                  className="w-full justify-start text-left h-auto p-3 text-xs"
                   onClick={() => setInputMessage(question.text)}
                 >
-                  <question.icon className="h-4 w-4 mr-2 text-muted-foreground" />
-                  <span className="text-sm">{question.text}</span>
+                  <question.icon className="h-3 w-3 mr-2 text-muted-foreground flex-shrink-0" />
+                  <span className="text-xs truncate">{question.text}</span>
                 </Button>
               ))}
             </CardContent>
@@ -417,36 +430,36 @@ export default function ChatbotPage() {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="space-y-3 text-sm">
+              <div className="space-y-3 text-xs">
                 <div className="flex items-start space-x-2">
-                  <Heart className="h-4 w-4 text-red-500 mt-0.5" />
-                  <div>
-                    <p className="font-medium">Medical Resources</p>
-                    <p className="text-muted-foreground">Find nearby hospitals, clinics, and medical supplies</p>
+                  <Navigation className="h-3 w-3 text-blue-500 mt-0.5 flex-shrink-0" />
+                  <div className="min-w-0">
+                    <p className="font-medium text-xs">Smart Routing</p>
+                    <p className="text-muted-foreground text-xs leading-tight">Find safe routes and avoid flooded areas</p>
                   </div>
                 </div>
                 
                 <div className="flex items-start space-x-2">
-                  <AlertTriangle className="h-4 w-4 text-orange-500 mt-0.5" />
-                  <div>
-                    <p className="font-medium">Emergency Reporting</p>
-                    <p className="text-muted-foreground">Guide you through incident reporting process</p>
+                  <AlertTriangle className="h-3 w-3 text-orange-500 mt-0.5 flex-shrink-0" />
+                  <div className="min-w-0">
+                    <p className="font-medium text-xs">Flood Reporting</p>
+                    <p className="text-muted-foreground text-xs leading-tight">Guide you through flood incident reporting process</p>
                   </div>
                 </div>
                 
                 <div className="flex items-start space-x-2">
-                  <Languages className="h-4 w-4 text-blue-500 mt-0.5" />
-                  <div>
-                    <p className="font-medium">Multilingual Support</p>
-                    <p className="text-muted-foreground">Communicate in multiple languages</p>
+                  <Languages className="h-3 w-3 text-blue-500 mt-0.5 flex-shrink-0" />
+                  <div className="min-w-0">
+                    <p className="font-medium text-xs">Multilingual Support</p>
+                    <p className="text-muted-foreground text-xs leading-tight">Communicate in multiple languages</p>
                   </div>
                 </div>
                 
                 <div className="flex items-start space-x-2">
-                  <Shield className="h-4 w-4 text-green-500 mt-0.5" />
-                  <div>
-                    <p className="font-medium">Disaster Preparedness</p>
-                    <p className="text-muted-foreground">Tips and guidance for emergency planning</p>
+                  <Shield className="h-3 w-3 text-green-500 mt-0.5 flex-shrink-0" />
+                  <div className="min-w-0">
+                    <p className="font-medium text-xs">Flood Preparedness</p>
+                    <p className="text-muted-foreground text-xs leading-tight">Tips and guidance for flood emergency planning</p>
                   </div>
                 </div>
               </div>
@@ -459,18 +472,18 @@ export default function ChatbotPage() {
               <CardTitle className="text-lg">Session Info</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="space-y-2 text-sm">
+              <div className="space-y-2 text-xs">
                 <div className="flex justify-between">
                   <span className="text-muted-foreground">Messages</span>
                   <span>{chatState.messages.length}</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-muted-foreground">Language</span>
-                  <span className="capitalize">{chatState.currentLanguage}</span>
+                  <span className="capitalize">{chatState.currentLanguage === 'ms' ? 'Malay' : chatState.currentLanguage === 'zh' ? 'Chinese' : 'English'}</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-muted-foreground">User</span>
-                  <span>{profile?.full_name || 'Guest'}</span>
+                  <span className="truncate max-w-20">{profile?.full_name || 'Guest'}</span>
                 </div>
               </div>
             </CardContent>

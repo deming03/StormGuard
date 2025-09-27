@@ -4,35 +4,32 @@ import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { severityUtils, disasterUtils, dateUtils } from '@/lib/utils'
-import type { DisasterWithLocation, MedicalResourceWithLocation } from '@/lib/database.types'
-import { MapPin, Clock, Users, AlertTriangle, Heart, Navigation } from 'lucide-react'
+import type { DisasterWithLocation } from '@/lib/database.types'
+import { MapPin, Clock, Users, AlertTriangle, Navigation } from 'lucide-react'
 import 'mapbox-gl/dist/mapbox-gl.css'
 
 interface DisasterMapProps {
   disasters?: DisasterWithLocation[]
-  medicalResources?: MedicalResourceWithLocation[]
-  showMedicalResources?: boolean
+  medicalResources?: any[] // Kept for compatibility but not used
+  showMedicalResources?: boolean // Kept for compatibility but ignored
   initialViewport?: {
     longitude: number
     latitude: number
     zoom: number
   }
   onDisasterClick?: (disaster: DisasterWithLocation) => void
-  onResourceClick?: (resource: MedicalResourceWithLocation) => void
   className?: string
 }
 
 export default function DisasterMap({ 
   disasters = [], 
-  medicalResources = [],
-  showMedicalResources = true,
+  medicalResources = [], // Ignored
+  showMedicalResources = false, // Always false now
   initialViewport = { longitude: 101.6559, latitude: 2.9213, zoom: 15 }, // Centered on Rekascape
   onDisasterClick,
-  onResourceClick,
   className 
 }: DisasterMapProps) {
   const [selectedDisaster, setSelectedDisaster] = useState<DisasterWithLocation | null>(null)
-  const [selectedResource, setSelectedResource] = useState<MedicalResourceWithLocation | null>(null)
   const [userLocation, setUserLocation] = useState<[number, number] | null>(null)
   const [mapError, setMapError] = useState<string | null>(null)
   const [locationError, setLocationError] = useState<string | null>(null)
@@ -127,12 +124,6 @@ export default function DisasterMap({
 
   // Function to update stores with user's real-time location
   const updateStoresWithUserLocation = (location: [number, number]) => {
-    // Import stores dynamically to avoid circular dependencies
-    import('@/store/medicalResourceStore').then(({ useMedicalResourceStore }) => {
-      // Update medical resources with 5km radius
-      useMedicalResourceStore.getState().updateResourcesForLocation(location)
-    })
-    
     import('@/store/disasterStore').then(({ useDisasterStore }) => {
       // Update disasters with 2km radius
       useDisasterStore.getState().updateDisastersForLocation(location)
@@ -283,7 +274,6 @@ export default function DisasterMap({
           onError={(e) => setMapError(e.error?.message || 'Failed to load map')}
           onClick={() => {
             setSelectedDisaster(null)
-            setSelectedResource(null)
           }}
         >
         {/* Navigation Controls */}
@@ -351,7 +341,6 @@ export default function DisasterMap({
             onClick={(e) => {
               e.originalEvent.stopPropagation()
               setSelectedDisaster(disaster)
-              setSelectedResource(null)
               onDisasterClick?.(disaster)
             }}
           >
@@ -370,30 +359,6 @@ export default function DisasterMap({
           </Marker>
         ))}
 
-        {/* Medical Resource Markers */}
-        {showMedicalResources && medicalResources.map((resource) => (
-          <Marker
-            key={resource.id}
-            longitude={resource.location.coordinates[0]}
-            latitude={resource.location.coordinates[1]}
-            anchor="center"
-            onClick={(e) => {
-              e.originalEvent.stopPropagation()
-              setSelectedResource(resource)
-              setSelectedDisaster(null)
-              onResourceClick?.(resource)
-            }}
-          >
-            <div 
-              className={`flex items-center justify-center w-6 h-6 rounded-full border-2 border-white shadow-lg cursor-pointer hover:scale-110 transition-transform ${
-                resource.status === 'available' ? 'bg-green-500' :
-                resource.status === 'busy' ? 'bg-yellow-500' : 'bg-red-500'
-              }`}
-            >
-              <Heart className="w-3 h-3 text-white" />
-            </div>
-          </Marker>
-        ))}
 
         {/* Disaster Popup */}
         {selectedDisaster && (
@@ -449,68 +414,6 @@ export default function DisasterMap({
           </Popup>
         )}
 
-        {/* Medical Resource Popup */}
-        {selectedResource && (
-          <Popup
-            longitude={selectedResource.location.coordinates[0]}
-            latitude={selectedResource.location.coordinates[1]}
-            anchor="bottom"
-            onClose={() => setSelectedResource(null)}
-            closeButton={true}
-            closeOnClick={false}
-            maxWidth="300px"
-          >
-            <Card className="border-0 shadow-none">
-              <CardContent className="p-3">
-                <div className="space-y-2">
-                  <div className="flex items-start justify-between">
-                    <h3 className="font-semibold text-sm">{selectedResource.name}</h3>
-                    <div className={`w-2 h-2 rounded-full ${
-                      selectedResource.status === 'available' ? 'bg-green-500' :
-                      selectedResource.status === 'busy' ? 'bg-yellow-500' : 'bg-red-500'
-                    }`} />
-                  </div>
-                  
-                  <div className="flex items-center space-x-1">
-                    <span>{selectedResource.resource_type === 'hospital' ? '🏥' : '⚕️'}</span>
-                    <Badge variant="outline" className="text-xs">
-                      {selectedResource.resource_type.replace('_', ' ')}
-                    </Badge>
-                  </div>
-                  
-                  {selectedResource.address && (
-                    <div className="flex items-start space-x-1">
-                      <MapPin className="h-3 w-3 mt-0.5 text-muted-foreground" />
-                      <span className="text-xs text-muted-foreground">{selectedResource.address}</span>
-                    </div>
-                  )}
-                  
-                  {selectedResource.contact_phone && (
-                    <div className="text-xs">
-                      <strong>Phone:</strong> {selectedResource.contact_phone}
-                    </div>
-                  )}
-                  
-                  {selectedResource.capacity && selectedResource.current_availability && (
-                    <div className="text-xs">
-                      <strong>Capacity:</strong> {selectedResource.current_availability}/{selectedResource.capacity}
-                    </div>
-                  )}
-                  
-                  <div className="flex space-x-2 mt-2">
-                    <Button size="sm" variant="outline" className="flex-1">
-                      <Navigation className="w-3 h-3 mr-1" />
-                      Directions
-                    </Button>
-                    <Button size="sm" className="flex-1">
-                      Contact
-                    </Button>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          </Popup>
-        )}
       </Map>
       )}
     </div>

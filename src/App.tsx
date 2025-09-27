@@ -8,7 +8,6 @@ import MainLayout from '@/components/layouts/MainLayout'
 import HomePage from '@/pages/HomePage'
 import DashboardPage from '@/pages/DashboardPage'
 import DisastersPage from '@/pages/DisastersPage'
-import MedicalResourcesPage from '@/pages/MedicalResourcesPage'
 import SmartRoutingPage from '@/pages/SmartRoutingPage'
 import ChatbotPage from '@/pages/ChatbotPage'
 import ProfilePage from '@/pages/ProfilePage'
@@ -63,7 +62,6 @@ function App() {
                     <Route index element={<SmartRoutingPage />} />
                     <Route path="overview" element={<DashboardPage />} />
                     <Route path="disasters/*" element={<DisastersPage />} />
-                    <Route path="medical-resources/*" element={<MedicalResourcesPage />} />
                     <Route path="smart-routing" element={<SmartRoutingPage />} />
                     <Route path="chatbot" element={<ChatbotPage />} />
                     <Route path="profile" element={<ProfilePage />} />

@@ -8,7 +8,6 @@ import { Input } from '@/components/ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { useDisasterStore } from '@/store/disasterStore'
-import { useMedicalResourceStore } from '@/store/medicalResourceStore'
 import DisasterMap from '@/components/map/DisasterMap'
 import { severityUtils, disasterUtils, dateUtils } from '@/lib/utils'
 import { 
@@ -268,7 +267,6 @@ Report Flood
 
 function DisastersMapView() {
   const { disasters, fetchDisasters } = useDisasterStore()
-  const { resources } = useMedicalResourceStore()
 
   useEffect(() => {
     fetchDisasters()
@@ -291,8 +289,8 @@ function DisastersMapView() {
         <CardContent className="p-0 h-full">
           <DisasterMap
             disasters={disasters}
-            medicalResources={resources}
-            showMedicalResources={true}
+            medicalResources={[]}
+            showMedicalResources={false}
             onDisasterClick={handleDisasterClick}
             className="h-full rounded-lg overflow-hidden"
           />
