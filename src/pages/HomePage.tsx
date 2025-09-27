@@ -95,7 +95,7 @@ export default function HomePage() {
               <div className="w-8 h-8 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-lg flex items-center justify-center">
                 <Globe className="h-5 w-5 text-white" />
               </div>
-              <span className="text-xl font-bold text-white">FloodGuard AI</span>
+              <span className="text-xl font-bold text-white">StormGuard AI</span>
             </div>
             <div className="flex items-center space-x-4">
               <Link to="/auth/signin">
@@ -121,16 +121,16 @@ export default function HomePage() {
               <div className="space-y-4">
                 <Badge variant="secondary" className="bg-blue-500/20 text-blue-300 border-blue-500/30">
                   <Waves className="w-3 h-3 mr-1" />
-                  AI-Powered Flood Protection
+                  AI-Powered Storm Protection
                 </Badge>
                 <h1 className="text-5xl lg:text-6xl font-bold text-white leading-tight">
-                  Smart Flood
+                  Smart Storm
                   <span className="bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
                     {" "}Management
                   </span>
                 </h1>
                 <p className="text-xl text-gray-300 leading-relaxed">
-                  Stay ahead of floods with AI-powered predictions, real-time monitoring, 
+                  Stay ahead of storms with AI-powered predictions, real-time monitoring, 
                   and community-driven early warning systems. Protect your community before disaster strikes.
                 </p>
               </div>
@@ -138,11 +138,11 @@ export default function HomePage() {
               <div className="flex flex-wrap gap-4">
                 <Link to="/auth/signup">
                   <Button size="lg" className="bg-blue-600 hover:bg-blue-700 text-white px-8">
-                    Start Flood Monitoring
+                    Start Storm Monitoring
                   </Button>
                 </Link>
                 <Button size="lg" variant="outline" className="text-white border-white/30 hover:bg-white/10 hover:text-white bg-transparent">
-                  View Live Flood Data
+                  View Live Storm Data
                 </Button>
               </div>
 
@@ -183,11 +183,11 @@ export default function HomePage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center space-y-4 mb-16">
             <h2 className="text-4xl font-bold text-white">
-              Complete Flood Protection Suite
+              Complete Storm Protection Suite
             </h2>
             <p className="text-xl text-gray-300 max-w-3xl mx-auto">
-              From AI flood predictions to community alerts, our platform provides everything 
-              needed for comprehensive flood management and protection.
+              From AI storm predictions to community alerts, our platform provides everything 
+              needed for comprehensive storm management and protection.
             </p>
           </div>
 
@@ -197,9 +197,9 @@ export default function HomePage() {
                 <div className="w-12 h-12 bg-blue-500/20 rounded-lg flex items-center justify-center mb-4">
                   <Waves className="w-6 h-6 text-blue-400" />
                 </div>
-                <CardTitle className="text-white">Real-Time Flood Monitoring</CardTitle>
+                <CardTitle className="text-white">Real-Time Storm Monitoring</CardTitle>
                 <CardDescription className="text-gray-300">
-                  Monitor flood conditions with live water level data, rainfall measurements, and predictive analytics.
+                  Monitor storm conditions with live weather data, rainfall measurements, and predictive analytics.
                 </CardDescription>
               </CardHeader>
             </Card>
@@ -209,9 +209,9 @@ export default function HomePage() {
                 <div className="w-12 h-12 bg-blue-500/20 rounded-lg flex items-center justify-center mb-4">
                   <MapPin className="w-6 h-6 text-blue-400" />
                 </div>
-                <CardTitle className="text-white">Interactive Flood Maps</CardTitle>
+                <CardTitle className="text-white">Interactive Storm Maps</CardTitle>
                 <CardDescription className="text-gray-300">
-                  Visualize flood risks and current conditions through advanced mapping with real-time overlays.
+                  Visualize storm risks and current conditions through advanced mapping with real-time overlays.
                 </CardDescription>
               </CardHeader>
             </Card>
@@ -223,7 +223,7 @@ export default function HomePage() {
                 </div>
                 <CardTitle className="text-white">Smart Routing</CardTitle>
                 <CardDescription className="text-gray-300">
-                  Find safe routes and avoid flooded areas with AI-powered navigation and real-time updates.
+                  Find safe routes and avoid storm-affected areas with AI-powered navigation and real-time updates.
                 </CardDescription>
               </CardHeader>
             </Card>
@@ -233,9 +233,9 @@ export default function HomePage() {
                 <div className="w-12 h-12 bg-purple-500/20 rounded-lg flex items-center justify-center mb-4">
                   <Brain className="w-6 h-6 text-purple-400" />
                 </div>
-                <CardTitle className="text-white">AI Flood Predictions</CardTitle>
+                <CardTitle className="text-white">AI Storm Predictions</CardTitle>
                 <CardDescription className="text-gray-300">
-                  Leverage advanced AI models to predict flood risks and receive early warnings before flooding occurs.
+                  Leverage advanced AI models to predict storm risks and receive early warnings before storms arrive.
                 </CardDescription>
               </CardHeader>
             </Card>
@@ -247,7 +247,7 @@ export default function HomePage() {
                 </div>
                 <CardTitle className="text-white">Multilingual AI Assistant</CardTitle>
                 <CardDescription className="text-gray-300">
-                  Get instant flood safety guidance and emergency information through our intelligent chatbot.
+                  Get instant storm safety guidance and emergency information through our intelligent chatbot.
                 </CardDescription>
               </CardHeader>
             </Card>
@@ -257,9 +257,9 @@ export default function HomePage() {
                 <div className="w-12 h-12 bg-orange-500/20 rounded-lg flex items-center justify-center mb-4">
                   <Camera className="w-6 h-6 text-orange-400" />
                 </div>
-                <CardTitle className="text-white">Community Flood Reporting</CardTitle>
+                <CardTitle className="text-white">Community Storm Reporting</CardTitle>
                 <CardDescription className="text-gray-300">
-                  Enable citizens to report flood conditions with photos and location data for rapid community response.
+                  Enable citizens to report storm conditions with photos and location data for rapid community response.
                 </CardDescription>
               </CardHeader>
             </Card>
@@ -273,7 +273,7 @@ export default function HomePage() {
           <div className="grid md:grid-cols-3 gap-8 text-center">
             <div className="space-y-2">
               <div className="text-4xl font-bold text-white">99.2%</div>
-              <div className="text-gray-300">Flood Prediction Accuracy</div>
+              <div className="text-gray-300">Storm Prediction Accuracy</div>
             </div>
             <div className="space-y-2">
               <div className="text-4xl font-bold text-white">15min</div>
@@ -292,11 +292,11 @@ export default function HomePage() {
         <div className="max-w-4xl mx-auto text-center px-4 sm:px-6 lg:px-8">
           <div className="space-y-8">
             <h2 className="text-4xl font-bold text-white">
-              Ready to Protect Your Community from Floods?
+              Ready to Protect Your Community from Storms?
             </h2>
             <p className="text-xl text-gray-300">
               Join thousands of communities, emergency responders, and citizens 
-              making their areas safer with AI-powered flood management.
+              making their areas safer with AI-powered storm management.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link to="/auth/signup">
@@ -320,7 +320,7 @@ export default function HomePage() {
               <div className="w-6 h-6 bg-gradient-to-r from-blue-600 to-indigo-600 rounded flex items-center justify-center">
                 <Globe className="h-4 w-4 text-white" />
               </div>
-              <span className="text-white font-semibold">FloodGuard AI</span>
+              <span className="text-white font-semibold">StormGuard AI</span>
             </div>
             <div className="flex items-center space-x-6 text-gray-400">
               <a href="#" className="hover:text-white transition-colors">Privacy</a>
@@ -328,7 +328,7 @@ export default function HomePage() {
               <a href="#" className="hover:text-white transition-colors">Support</a>
             </div>
             <p className="text-gray-400 text-sm">
-              © 2025 FloodGuard AI. All rights reserved.
+              © 2025 StormGuard AI. All rights reserved.
             </p>
           </div>
         </div>

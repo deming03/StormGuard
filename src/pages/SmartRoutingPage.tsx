@@ -118,7 +118,7 @@ const SmartRoutingPage: React.FC = () => {
               Safe Route Planning
             </CardTitle>
           </CardHeader>
-          <CardContent className="flex-1 overflow-y-auto" style={{ maxHeight: 'calc(100vh - 280px)' }}>
+          <CardContent className="flex-1 overflow-y-auto" style={{ maxHeight: 'calc(100vh - 220px)' }}>
             <div className="space-y-6">
               {/* Routing Panel */}
               <div>

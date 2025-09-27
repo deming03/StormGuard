@@ -20,7 +20,7 @@ function App() {
 
   useEffect(() => {
     // Any global initialization can go here
-    console.log('AI Disaster Management System initialized')
+    console.log('StormGuard System initialized')
   }, [])
 
   if (loading) {

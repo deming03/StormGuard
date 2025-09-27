@@ -294,7 +294,7 @@ export default function ChatbotPage() {
                   </AvatarFallback>
                 </Avatar>
                 <div>
-                  <CardTitle className="text-xl font-semibold text-gray-800">FloodGuard AI Assistant</CardTitle>
+                  <CardTitle className="text-xl font-semibold text-gray-800">StormGuard AI Assistant</CardTitle>
                   <CardDescription className="flex items-center gap-2 text-sm">
                     <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
                     <span className="text-green-600 font-medium">Online & Ready to Help</span>

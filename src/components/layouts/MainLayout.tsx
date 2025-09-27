@@ -67,7 +67,7 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
                 </div>
                 <div className="hidden sm:block">
                   <h1 className="text-xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
-                    FloodGuard AI
+                    StormGuard AI
                   </h1>
                 </div>
               </Link>

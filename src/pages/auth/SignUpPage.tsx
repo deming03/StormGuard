@@ -61,7 +61,7 @@ export default function SignUpPage() {
       })
       toast({
         title: "Account created successfully!",
-        description: "Welcome to DisasterGuard AI. You can now access your dashboard.",
+        description: "Welcome to StormGuard. You can now access your dashboard.",
       })
       navigate('/dashboard')
     } catch (error) {
@@ -81,14 +81,14 @@ export default function SignUpPage() {
             <Shield className="h-12 w-12 text-blue-400" />
           </div>
           <h2 className="text-3xl font-bold text-white">Create your account</h2>
-          <p className="text-gray-400 mt-2">Join DisasterGuard AI to help save lives</p>
+          <p className="text-gray-400 mt-2">Join StormGuard to protect communities from storms</p>
         </div>
 
         <Card className="bg-white/10 backdrop-blur-xl border-white/20">
           <CardHeader className="space-y-1">
             <CardTitle className="text-white">Get started</CardTitle>
             <CardDescription className="text-gray-300">
-              Create your account to access the disaster management platform
+              Create your account to access the storm management platform
             </CardDescription>
             <div className="bg-blue-500/20 border border-blue-400/30 rounded-lg p-3 mt-3">
               <p className="text-blue-200 text-sm">
@@ -136,13 +136,13 @@ export default function SignUpPage() {
                   </SelectTrigger>
                   <SelectContent className="bg-slate-800 border-white/20">
                     <SelectItem value="citizen" className="text-white hover:bg-white/10">
-                      Citizen - Report incidents and access resources
+                      Citizen - Report storm incidents and access resources
                     </SelectItem>
                     <SelectItem value="responder" className="text-white hover:bg-white/10">
-                      First Responder - Emergency response professional
+                      First Responder - Storm emergency response professional
                     </SelectItem>
                     <SelectItem value="coordinator" className="text-white hover:bg-white/10">
-                      Coordinator - Disaster management coordinator
+                      Coordinator - Storm management coordinator
                     </SelectItem>
                   </SelectContent>
                 </Select>
@@ -156,7 +156,7 @@ export default function SignUpPage() {
                   <Label htmlFor="organization" className="text-white">Organization</Label>
                   <Input
                     id="organization"
-                    placeholder="Fire Department, Red Cross, etc."
+                    placeholder="Fire Department, Emergency Services, Water Management, etc."
                     className="bg-white/5 border-white/20 text-white placeholder:text-gray-400"
                     {...form.register('organization')}
                   />

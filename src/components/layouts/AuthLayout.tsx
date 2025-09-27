@@ -14,22 +14,22 @@ const AuthLayout: React.FC<AuthLayoutProps> = ({ children }) => {
         <div className="relative z-10 flex flex-col justify-center max-w-md">
           <div className="mb-8">
             <h1 className="text-4xl font-bold mb-4">
-              AI Disaster Management System
+              StormGuard
             </h1>
             <p className="text-xl text-blue-100 mb-6">
-              Real-time disaster tracking, AI-powered predictions, and efficient resource management for emergency response.
+              Real-time storm monitoring, AI-powered storm predictions, and efficient resource management for storm emergency response.
             </p>
           </div>
           
           <div className="space-y-6">
             <div className="flex items-start space-x-4">
               <div className="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center mt-1">
-                <span className="text-lg">🌍</span>
+                <span className="text-lg">🌊</span>
               </div>
               <div>
-                <h3 className="font-semibold mb-1">Real-Time Tracking</h3>
+                <h3 className="font-semibold mb-1">Real-Time Storm Tracking</h3>
                 <p className="text-blue-100 text-sm">
-                  Monitor disasters as they unfold with live data feeds and interactive maps
+                  Monitor storm events as they unfold with live weather data and interactive storm maps
                 </p>
               </div>
             </div>
@@ -39,21 +39,21 @@ const AuthLayout: React.FC<AuthLayoutProps> = ({ children }) => {
                 <span className="text-lg">🤖</span>
               </div>
               <div>
-                <h3 className="font-semibold mb-1">AI Predictions</h3>
+                <h3 className="font-semibold mb-1">Storm Predictions</h3>
                 <p className="text-blue-100 text-sm">
-                  Leverage Google Gemini AI and LSTM models for disaster forecasting
+                  Leverage Google Gemini AI and LSTM models for storm forecasting and early warning
                 </p>
               </div>
             </div>
             
             <div className="flex items-start space-x-4">
               <div className="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center mt-1">
-                <span className="text-lg">🏥</span>
+                <span className="text-lg">🚁</span>
               </div>
               <div>
-                <h3 className="font-semibold mb-1">Medical Resources</h3>
+                <h3 className="font-semibold mb-1">Emergency Resources</h3>
                 <p className="text-blue-100 text-sm">
-                  Find and manage medical resources with location-based discovery
+                  Find and manage storm emergency resources including evacuation centers and rescue teams
                 </p>
               </div>
             </div>
@@ -61,7 +61,6 @@ const AuthLayout: React.FC<AuthLayoutProps> = ({ children }) => {
         </div>
         
         {/* Decorative elements */}
-        <div className="absolute top-10 right-10 w-32 h-32 border-2 border-white/20 rounded-full"></div>
         <div className="absolute bottom-10 right-20 w-20 h-20 border border-white/10 rounded-full"></div>
         <div className="absolute top-1/3 right-1/4 w-2 h-2 bg-white/30 rounded-full"></div>
       </div>
@@ -71,10 +70,10 @@ const AuthLayout: React.FC<AuthLayoutProps> = ({ children }) => {
         <div className="w-full max-w-md">
           <div className="mb-8 text-center lg:hidden">
             <h1 className="text-3xl font-bold text-gray-900 mb-2">
-              AI Disaster Management
+              StormGuard
             </h1>
             <p className="text-gray-600">
-              Emergency response and resource management platform
+              Storm monitoring and emergency response platform
             </p>
           </div>
           
