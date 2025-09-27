@@ -1,0 +1,150 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
+
+    --primary: 222.2 47.4% 11.2%;
+    --primary-foreground: 210 40% 98%;
+
+    --secondary: 210 40% 96%;
+    --secondary-foreground: 222.2 84% 4.9%;
+
+    --muted: 210 40% 96%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+
+    --accent: 210 40% 96%;
+    --accent-foreground: 222.2 84% 4.9%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 222.2 84% 4.9%;
+
+    --radius: 0.5rem;
+  }
+
+  .dark {
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+
+    --card: 222.2 84% 4.9%;
+    --card-foreground: 210 40% 98%;
+
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 210 40% 98%;
+
+    --primary: 210 40% 98%;
+    --primary-foreground: 222.2 47.4% 11.2%;
+
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
+
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 212.7 26.8% 83.9%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+/* Mapbox GL CSS customizations */
+.mapboxgl-ctrl-group {
+  @apply shadow-lg border border-border;
+}
+
+.mapboxgl-ctrl-group > button {
+  @apply bg-background text-foreground;
+}
+
+.mapboxgl-ctrl-group > button:hover {
+  @apply bg-accent;
+}
+
+.mapboxgl-popup-content {
+  @apply bg-card text-card-foreground border border-border rounded-lg shadow-lg;
+}
+
+/* Custom disaster severity colors */
+.severity-low {
+  @apply bg-safe-50 text-safe-900 border-safe-500;
+}
+
+.severity-medium {
+  @apply bg-warning-50 text-warning-900 border-warning-500;
+}
+
+.severity-high {
+  @apply bg-emergency-50 text-emergency-900 border-emergency-500;
+}
+
+.severity-critical {
+  @apply bg-emergency-100 text-emergency-900 border-emergency-600;
+}
+
+/* Loading animations */
+.pulse-ring {
+  animation: pulse-ring 1.25s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
+}
+
+@keyframes pulse-ring {
+  0% {
+    transform: scale(0.33);
+  }
+  40%, 50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.33);
+  }
+}
+
+/* Notification styles */
+.notification-emergency {
+  @apply bg-emergency-500 text-white border-emergency-600;
+}
+
+.notification-warning {
+  @apply bg-warning-500 text-white border-warning-600;
+}
+
+.notification-info {
+  @apply bg-blue-500 text-white border-blue-600;
+}
+
+/* Globe container for COBE */
+.globe-container {
+  @apply relative overflow-hidden;
+}
+
+.globe-container canvas {
+  @apply w-full h-full;
+}
