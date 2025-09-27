@@ -243,22 +243,24 @@ export default function ChatbotPage() {
   ]
 
   return (
-    <div className="max-w-4xl mx-auto space-y-6">
+    <div className="max-w-6xl mx-auto space-y-6">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-        <div>
-          <h1 className="text-3xl font-bold flex items-center gap-2">
-            <MessageSquare className="h-8 w-8 text-blue-500" />
-            AI Assistant
+      <div className="text-center py-6">
+        <div className="mb-6">
+          <div className="w-16 h-16 bg-gradient-to-r from-purple-500 to-indigo-500 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg">
+            <MessageSquare className="h-8 w-8 text-white" />
+          </div>
+          <h1 className="text-4xl font-bold bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent mb-2">
+            AI Assistant 🤖
           </h1>
-          <p className="text-muted-foreground">
-            Get instant help with emergency resources and disaster management
+          <p className="text-xl text-gray-600 mb-4">
+            Get instant help with flood management and emergency assistance
           </p>
         </div>
         
-        <div className="flex items-center gap-2">
+        <div className="flex items-center justify-center gap-3">
           <Select value={chatState.currentLanguage} onValueChange={handleLanguageChange}>
-            <SelectTrigger className="w-[140px]">
+            <SelectTrigger className="w-[160px] bg-white/60 border-0 shadow-md">
               <SelectValue placeholder="Language" />
             </SelectTrigger>
             <SelectContent>
@@ -268,34 +270,39 @@ export default function ChatbotPage() {
             </SelectContent>
           </Select>
           
-          <Button variant="outline" size="sm" onClick={clearChat}>
-            <RefreshCw className="h-4 w-4 mr-1" />
-            Clear
+          <Button 
+            variant="outline" 
+            size="sm" 
+            onClick={clearChat}
+            className="bg-white/60 border-0 shadow-md hover:shadow-lg transition-all duration-200"
+          >
+            <RefreshCw className="h-4 w-4 mr-2" />
+            Clear Chat
           </Button>
         </div>
       </div>
 
       <div className="grid gap-6 lg:grid-cols-3">
         {/* Chat Interface */}
-        <Card className="lg:col-span-2">
-          <CardHeader className="border-b">
+        <Card className="lg:col-span-2 bg-white/80 backdrop-blur-sm border-0 shadow-xl">
+          <CardHeader className="border-b border-gray-100 bg-gradient-to-r from-purple-50 to-indigo-50">
             <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-2">
-                <Avatar className="h-8 w-8">
-                  <AvatarFallback className="bg-blue-500 text-white">
-                    <Bot className="h-4 w-4" />
+              <div className="flex items-center space-x-3">
+                <Avatar className="h-10 w-10">
+                  <AvatarFallback className="bg-gradient-to-r from-purple-500 to-indigo-500 text-white">
+                    <Bot className="h-5 w-5" />
                   </AvatarFallback>
                 </Avatar>
                 <div>
-                  <CardTitle className="text-lg">DisasterGuard AI</CardTitle>
-                  <CardDescription className="flex items-center gap-1">
+                  <CardTitle className="text-xl font-semibold text-gray-800">FloodGuard AI Assistant</CardTitle>
+                  <CardDescription className="flex items-center gap-2 text-sm">
                     <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
-                    Online & Ready to Help
+                    <span className="text-green-600 font-medium">Online & Ready to Help</span>
                   </CardDescription>
                 </div>
               </div>
-              <Badge variant="secondary" className="flex items-center gap-1">
-                <Languages className="h-3 w-3" />
+              <Badge className="bg-gradient-to-r from-purple-100 to-indigo-100 text-purple-700 border-0 px-3 py-1">
+                <Languages className="h-3 w-3 mr-1" />
                 Multilingual
               </Badge>
             </div>
@@ -366,20 +373,21 @@ export default function ChatbotPage() {
               <div ref={messagesEndRef} />
             </ScrollArea>
 
-            <div className="border-t p-4 bg-white">
-              <div className="flex space-x-2">
+            <div className="border-t border-gray-100 p-4 bg-gradient-to-r from-gray-50 to-white">
+              <div className="flex space-x-3">
                 <Input
                   ref={inputRef}
-                  placeholder="Type your message... (Press Enter to send)"
+                  placeholder="Ask me anything about flood safety... 💬"
                   value={inputMessage}
                   onChange={(e) => setInputMessage(e.target.value)}
                   onKeyPress={handleKeyPress}
                   disabled={chatState.isTyping}
-                  className="flex-1"
+                  className="flex-1 bg-white border-0 shadow-md focus:shadow-lg transition-all duration-200 rounded-full px-4 py-3"
                 />
                 <Button
                   onClick={handleSendMessage}
                   disabled={!inputMessage.trim() || chatState.isTyping}
+                  className="bg-gradient-to-r from-purple-500 to-indigo-500 hover:from-purple-600 hover:to-indigo-600 text-white shadow-md hover:shadow-lg transition-all duration-200 rounded-full px-6"
                 >
                   {chatState.isTyping ? (
                     <Loader2 className="h-4 w-4 animate-spin" />
@@ -395,14 +403,13 @@ export default function ChatbotPage() {
         {/* Sidebar */}
         <div className="space-y-4">
           {/* Quick Questions */}
-          <Card>
+          <Card className="bg-gradient-to-br from-yellow-50 to-orange-50 border-0 shadow-lg">
             <CardHeader>
-              <CardTitle className="text-lg flex items-center gap-2">
-                <Sparkles className="h-5 w-5 text-yellow-500" />
-                Quick Help
+              <CardTitle className="text-lg flex items-center gap-2 font-semibold text-gray-800">
+                ✨ Quick Help
               </CardTitle>
               <CardDescription>
-                Common questions and shortcuts
+                Get started with these common questions
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-2">
@@ -422,11 +429,11 @@ export default function ChatbotPage() {
           </Card>
 
           {/* AI Capabilities */}
-          <Card>
+          <Card className="bg-gradient-to-br from-blue-50 to-indigo-50 border-0 shadow-lg">
             <CardHeader>
-              <CardTitle className="text-lg">AI Capabilities</CardTitle>
+              <CardTitle className="text-lg font-semibold text-gray-800">🤖 AI Capabilities</CardTitle>
               <CardDescription>
-                What I can help you with
+                Here's what I can help you with
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -467,9 +474,9 @@ export default function ChatbotPage() {
           </Card>
 
           {/* Chat Stats */}
-          <Card>
+          <Card className="bg-gradient-to-br from-green-50 to-emerald-50 border-0 shadow-lg">
             <CardHeader>
-              <CardTitle className="text-lg">Session Info</CardTitle>
+              <CardTitle className="text-lg font-semibold text-gray-800">📊 Session Info</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="space-y-2 text-xs">

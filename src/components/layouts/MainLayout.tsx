@@ -3,21 +3,21 @@ import { Link, useLocation } from 'react-router-dom'
 import { useAuthStore } from '@/store/authStore'
 import { useNotificationStore } from '@/store/notificationStore'
 import { Button } from '@/components/ui/button'
+import { Avatar, AvatarFallback } from '@/components/ui/avatar'
+import { Badge } from '@/components/ui/badge'
 import NotificationPanel from '@/components/NotificationPanel'
 import { 
   Home, 
   AlertTriangle, 
-  FileText, 
   MessageCircle, 
   User, 
-  Settings, 
   LogOut, 
   Menu, 
   X,
   Bell,
-  Search,
   Globe,
-  Route
+  Route,
+  ChevronDown
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
@@ -26,15 +26,15 @@ interface MainLayoutProps {
 }
 
 const navigation = [
-  { name: 'Smart Routing', href: '/dashboard', icon: Route },
-  { name: 'Overview', href: '/dashboard/overview', icon: Home },
-  { name: 'Flood Management', href: '/dashboard/disasters', icon: AlertTriangle },
-  { name: 'AI Chatbot', href: '/dashboard/chatbot', icon: MessageCircle },
+  { name: 'Smart Routing', href: '/dashboard', icon: Route, color: 'text-blue-600' },
+  { name: 'Overview', href: '/dashboard/overview', icon: Home, color: 'text-green-600' },
+  { name: 'Flood Management', href: '/dashboard/disasters', icon: AlertTriangle, color: 'text-orange-600' },
+  { name: 'AI Assistant', href: '/dashboard/chatbot', icon: MessageCircle, color: 'text-purple-600' },
 ]
 
 const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
-  const [sidebarOpen, setSidebarOpen] = useState(false)
-  const [sidebarCollapsed, setSidebarCollapsed] = useState(false)
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const [userMenuOpen, setUserMenuOpen] = useState(false)
   const [notificationPanelOpen, setNotificationPanelOpen] = useState(false)
   const location = useLocation()
   const { profile, signOut } = useAuthStore()
@@ -43,6 +43,7 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
   const handleSignOut = async () => {
     try {
       await signOut()
+      setUserMenuOpen(false)
     } catch (error) {
       console.error('Sign out error:', error)
     }
@@ -53,172 +54,70 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
   }
 
   return (
-    <div className="flex min-h-screen bg-gray-50">
-      {/* Mobile sidebar overlay */}
-      {sidebarOpen && (
-        <div 
-          className="fixed inset-0 z-20 bg-black/50 lg:hidden"
-          onClick={() => setSidebarOpen(false)}
-        />
-      )}
-
-      {/* Sidebar */}
-      {!sidebarCollapsed && (
-        <div className={cn(
-          "fixed inset-y-0 left-0 z-30 w-64 bg-white shadow-lg transform transition-transform duration-200 ease-in-out lg:relative lg:translate-x-0",
-          sidebarOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
-        )}>
-        <div className="flex flex-col h-full">
-          {/* Logo/Brand */}
-          <div className="flex items-center justify-between h-16 px-6 border-b border-gray-200">
-            <div className="flex items-center space-x-3">
-              <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
-                <Globe className="w-5 h-5 text-white" />
-              </div>
-              <div>
-                <h1 className="text-lg font-bold text-gray-900">Disaster AI</h1>
-                <p className="text-xs text-gray-500">Management System</p>
-              </div>
-            </div>
-            <Button
-              variant="ghost"
-              size="icon"
-              className="lg:hidden"
-              onClick={() => setSidebarOpen(false)}
-            >
-              <X className="w-5 h-5" />
-            </Button>
-          </div>
-
-          {/* Navigation */}
-          <nav className="flex-1 px-4 py-6 space-y-2 overflow-y-auto">
-            {navigation.map((item) => {
-              const Icon = item.icon
-              const active = isActive(item.href)
-              
-              return (
-                <Link
-                  key={item.name}
-                  to={item.href}
-                  onClick={() => setSidebarOpen(false)}
-                  className={cn(
-                    "flex items-center px-3 py-2 rounded-lg text-sm font-medium transition-colors",
-                    active
-                      ? "bg-blue-50 text-blue-700 border-r-2 border-blue-600"
-                      : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
-                  )}
-                >
-                  <Icon className="w-5 h-5 mr-3" />
-                  {item.name}
-                </Link>
-              )
-            })}
-          </nav>
-
-          {/* User Profile */}
-          <div className="p-4 border-t border-gray-200">
-            <div className="flex items-center space-x-3 mb-3">
-              <div className="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center">
-                <User className="w-5 h-5 text-white" />
-              </div>
-              <div className="flex-1 min-w-0">
-                <p className="text-sm font-medium text-gray-900 truncate">
-                  {profile?.full_name || 'User'}
-                </p>
-                <p className="text-xs text-gray-500 truncate">
-                  {profile?.email}
-                </p>
-              </div>
-            </div>
-            
-            <div className="flex space-x-2">
-              <Link
-                to="/dashboard/profile"
-                className="flex-1"
-                onClick={() => setSidebarOpen(false)}
-              >
-                <Button variant="ghost" size="sm" className="w-full justify-start">
-                  <Settings className="w-4 h-4 mr-2" />
-                  Profile
-                </Button>
-              </Link>
-              <Button 
-                variant="ghost" 
-                size="sm" 
-                onClick={handleSignOut}
-                className="px-3"
-              >
-                <LogOut className="w-4 h-4" />
-              </Button>
-            </div>
-          </div>
-        </div>
-      </div>
-      )}
-
-      {/* Main content */}
-      <div className={cn(
-        "flex-1 flex flex-col min-w-0 transition-all duration-200",
-        sidebarCollapsed ? "ml-0" : ""
-      )}>
-        {/* Top header */}
-        <header className="bg-white shadow-sm border-b border-gray-200 flex-shrink-0">
-          <div className="flex items-center justify-between h-16 px-4 sm:px-6 lg:px-8">
-            <div className="flex items-center space-x-4">
-              <Button
-                variant="ghost"
-                size="icon"
-                className={sidebarCollapsed ? "" : "lg:hidden"}
-                onClick={() => {
-                  if (sidebarCollapsed) {
-                    setSidebarCollapsed(false)
-                  } else {
-                    setSidebarOpen(true)
-                  }
-                }}
-              >
-                <Menu className="w-5 h-5" />
-              </Button>
-              
-              {!sidebarCollapsed && (
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="hidden lg:flex"
-                  onClick={() => setSidebarCollapsed(true)}
-                  title="Collapse sidebar"
-                >
-                  <X className="w-5 h-5" />
-                </Button>
-              )}
-
-              {/* Search bar */}
-              <div className="hidden md:block">
-                <div className="relative">
-                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
-                  <input
-                    type="text"
-                    placeholder="Search flood incidents..."
-                    className="pl-10 pr-4 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent w-64"
-                  />
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50">
+      {/* Top Navigation Bar */}
+      <header className="bg-white/80 backdrop-blur-md border-b border-gray-200/60 sticky top-0 z-40 shadow-sm">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between h-16">
+            {/* Logo and Brand */}
+            <div className="flex items-center">
+              <Link to="/" className="flex items-center space-x-3 hover:opacity-80 transition-opacity">
+                <div className="w-10 h-10 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-xl flex items-center justify-center shadow-lg">
+                  <Globe className="w-6 h-6 text-white" />
                 </div>
-              </div>
+                <div className="hidden sm:block">
+                  <h1 className="text-xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
+                    FloodGuard AI
+                  </h1>
+                </div>
+              </Link>
             </div>
 
-            <div className="flex items-center space-x-4">
+            {/* Desktop Navigation - Centered */}
+            <nav className="hidden lg:flex items-center space-x-1 absolute left-1/2 transform -translate-x-1/2">
+              {navigation.map((item) => {
+                const Icon = item.icon
+                const active = isActive(item.href)
+                
+                return (
+                  <Link
+                    key={item.name}
+                    to={item.href}
+                    className={cn(
+                      "flex items-center px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 hover:scale-105",
+                      active
+                        ? "bg-gradient-to-r from-blue-500 to-indigo-500 text-white shadow-md"
+                        : "text-gray-600 hover:bg-gray-100 hover:text-gray-900"
+                    )}
+                  >
+                    <Icon className={cn(
+                      "w-4 h-4 mr-2",
+                      active ? "text-white" : item.color
+                    )} />
+                    {item.name}
+                  </Link>
+                )
+              })}
+            </nav>
+
+            {/* Right side actions */}
+            <div className="flex items-center space-x-3">
               {/* Notifications */}
               <div className="relative">
                 <Button 
                   variant="ghost" 
                   size="icon"
                   onClick={() => setNotificationPanelOpen(!notificationPanelOpen)}
-                  className={notificationPanelOpen ? 'bg-gray-100' : ''}
+                  className={cn(
+                    "relative rounded-full hover:bg-gray-100 transition-colors",
+                    notificationPanelOpen && 'bg-gray-100'
+                  )}
                 >
-                  <Bell className="w-5 h-5" />
+                  <Bell className="w-5 h-5 text-gray-600" />
                   {unreadCount > 0 && (
-                    <span className="absolute -top-1 -right-1 w-5 h-5 bg-red-500 text-white rounded-full text-xs flex items-center justify-center animate-pulse">
+                    <Badge className="absolute -top-1 -right-1 w-5 h-5 p-0 bg-red-500 text-white rounded-full text-xs flex items-center justify-center animate-pulse border-2 border-white">
                       {unreadCount > 9 ? '9+' : unreadCount}
-                    </span>
+                    </Badge>
                   )}
                 </Button>
                 
@@ -228,20 +127,121 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
                 />
               </div>
 
-              {/* Emergency Status Indicator */}
-              <div className="flex items-center space-x-2 px-3 py-1 bg-green-50 text-green-800 rounded-full text-sm">
-                <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-                <span>System Active</span>
+              {/* User Menu */}
+              <div className="relative">
+                <Button
+                  variant="ghost"
+                  onClick={() => setUserMenuOpen(!userMenuOpen)}
+                  className="flex items-center space-x-2 rounded-full hover:bg-gray-100 transition-colors px-3 py-2"
+                >
+                  <Avatar className="h-8 w-8">
+                    <AvatarFallback className="bg-gradient-to-r from-blue-500 to-indigo-500 text-white text-sm">
+                      {profile?.full_name?.charAt(0) || 'U'}
+                    </AvatarFallback>
+                  </Avatar>
+                  <div className="hidden md:block text-left">
+                    <p className="text-sm font-medium text-gray-700">
+                      {profile?.full_name || 'User'}
+                    </p>
+                    <p className="text-xs text-gray-500 truncate max-w-32">
+                      {profile?.email}
+                    </p>
+                  </div>
+                  <ChevronDown className="w-4 h-4 text-gray-500" />
+                </Button>
+
+                {/* User Dropdown */}
+                {userMenuOpen && (
+                  <div className="absolute right-0 mt-2 w-56 bg-white rounded-xl shadow-lg border border-gray-200 py-2 z-50">
+                    <div className="px-4 py-3 border-b border-gray-100">
+                      <p className="text-sm font-medium text-gray-900">{profile?.full_name || 'User'}</p>
+                      <p className="text-xs text-gray-500 truncate">{profile?.email}</p>
+                    </div>
+                    <Link
+                      to="/dashboard/profile"
+                      className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
+                      onClick={() => setUserMenuOpen(false)}
+                    >
+                      <User className="w-4 h-4 mr-3 text-gray-400" />
+                      Profile Settings
+                    </Link>
+                    <button
+                      onClick={handleSignOut}
+                      className="flex items-center w-full px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors"
+                    >
+                      <LogOut className="w-4 h-4 mr-3" />
+                      Sign Out
+                    </button>
+                  </div>
+                )}
               </div>
+
+              {/* Mobile menu button */}
+              <Button
+                variant="ghost"
+                size="icon"
+                className="lg:hidden rounded-full hover:bg-gray-100"
+                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              >
+                {mobileMenuOpen ? (
+                  <X className="w-5 h-5" />
+                ) : (
+                  <Menu className="w-5 h-5" />
+                )}
+              </Button>
             </div>
           </div>
-        </header>
+        </div>
 
-        {/* Page content */}
-        <main className="flex-1 p-4 sm:p-6 lg:p-8 overflow-auto">
-          {children}
-        </main>
-      </div>
+        {/* Mobile Navigation */}
+        {mobileMenuOpen && (
+          <div className="lg:hidden border-t border-gray-200 bg-white">
+            <div className="px-4 py-3 space-y-1">
+              {navigation.map((item) => {
+                const Icon = item.icon
+                const active = isActive(item.href)
+                
+                return (
+                  <Link
+                    key={item.name}
+                    to={item.href}
+                    onClick={() => setMobileMenuOpen(false)}
+                    className={cn(
+                      "flex items-center px-4 py-3 rounded-lg text-base font-medium transition-colors",
+                      active
+                        ? "bg-blue-50 text-blue-700 border-l-4 border-blue-600"
+                        : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
+                    )}
+                  >
+                    <Icon className={cn(
+                      "w-5 h-5 mr-3",
+                      active ? "text-blue-600" : item.color
+                    )} />
+                    {item.name}
+                  </Link>
+                )
+              })}
+            </div>
+          </div>
+        )}
+      </header>
+
+      {/* Main Content */}
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="bg-white/60 backdrop-blur-sm rounded-2xl shadow-sm border border-gray-200/60 min-h-[calc(100vh-12rem)]">
+          <div className="p-6 lg:p-8">
+            {children}
+          </div>
+        </div>
+      </main>
+
+      {/* Click outside handlers */}
+      {userMenuOpen && (
+        <div 
+          className="fixed inset-0 z-30" 
+          onClick={() => setUserMenuOpen(false)}
+        />
+      )}
     </div>
   )
 }
