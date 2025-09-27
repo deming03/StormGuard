@@ -16,7 +16,6 @@ import {
   Car,
   PersonStanding,
   Bike,
-  TestTube,
   Loader2,
   CheckCircle,
   XCircle,
@@ -72,7 +71,6 @@ const SafeRoutingPanel: React.FC<SafeRoutingPanelProps> = ({
   const [showEndSuggestions, setShowEndSuggestions] = useState(false);
   
   // Other states
-  const [apiTestResult, setApiTestResult] = useState<string | null>(null);
   const [geocodingService, setGeocodingService] = useState<GeocodingService | null>(null);
 
   const {
@@ -91,7 +89,6 @@ const SafeRoutingPanel: React.FC<SafeRoutingPanelProps> = ({
     setAvoidHighRisk,
     setVehicleType,
     clearError,
-    testRoutingConnection,
   } = useRoutingStore();
 
   const { getAllRiskAssessments } = useRiskAssessmentStore();
@@ -286,51 +283,6 @@ const SafeRoutingPanel: React.FC<SafeRoutingPanelProps> = ({
     }
   };
 
-  // Test API connection
-  const handleTestConnection = async () => {
-    setApiTestResult('Testing...');
-    const result = await testRoutingConnection();
-    setApiTestResult(result.success ? `✅ ${result.message}` : `❌ ${result.message}`);
-  };
-
-  // Test geocoding connection
-  const handleTestGeocoding = async () => {
-    if (!geocodingService) {
-      setApiTestResult('❌ Geocoding service not initialized');
-      return;
-    }
-
-    setApiTestResult('Testing geocoding...');
-    const result = await geocodingService.testGeocodingConnection();
-    setApiTestResult(result.success ? `✅ Geocoding: ${result.message}` : `❌ Geocoding: ${result.message}`);
-  };
-
-  // Test specific location search
-  const handleTestLocationSearch = async () => {
-    if (!geocodingService) {
-      setApiTestResult('❌ Geocoding service not initialized');
-      return;
-    }
-
-    setApiTestResult('Testing location search...');
-    
-    const testQueries = ['KLCC', 'Mid Valley', 'Bangsar', 'Sunway Pyramid', 'Pavilion'];
-    let successCount = 0;
-    
-    for (const query of testQueries) {
-      try {
-        const results = await geocodingService.searchPlacesInMalaysia(query);
-        if (results.length > 0) {
-          successCount++;
-        }
-        console.log(`Search "${query}": ${results.length} results`, results.map(r => r.name));
-      } catch (error) {
-        console.error(`Search "${query}" failed:`, error);
-      }
-    }
-    
-    setApiTestResult(`✅ Location search: ${successCount}/${testQueries.length} queries successful. Check console for details.`);
-  };
 
   // Calculate routes
   const handleCalculateRoutes = async () => {
@@ -392,30 +344,6 @@ const SafeRoutingPanel: React.FC<SafeRoutingPanelProps> = ({
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
-          {/* Test API Connection */}
-          <div className="space-y-2">
-            <div className="flex gap-2 flex-wrap">
-              <Button onClick={handleTestConnection} variant="outline" size="sm">
-                <TestTube className="h-4 w-4 mr-2" />
-                Test Routing API
-              </Button>
-              <Button onClick={handleTestGeocoding} variant="outline" size="sm">
-                <TestTube className="h-4 w-4 mr-2" />
-                Test Search API
-              </Button>
-              <Button onClick={handleTestLocationSearch} variant="outline" size="sm">
-                <Navigation className="h-4 w-4 mr-2" />
-                Debug KL Search
-              </Button>
-            </div>
-            {apiTestResult && (
-              <div className="text-sm px-3 py-1 bg-gray-100 rounded max-w-full break-words">
-                {apiTestResult}
-              </div>
-            )}
-          </div>
-
-          <Separator />
 
           {/* Route Points - Search Interface */}
           <div className="space-y-4">

@@ -8,6 +8,7 @@ interface RiskAssessmentStore {
   error: string | null;
 
   assessRisk: (locationKey: string, weatherData: WeatherData) => Promise<void>;
+  addRiskAssessment: (assessment: DisasterRiskAssessment) => void;
   getRiskByLocation: (locationKey: string) => DisasterRiskAssessment | null;
   getHighRiskAreas: () => DisasterRiskAssessment[];
   getAllRiskAssessments: () => DisasterRiskAssessment[];
@@ -36,6 +37,13 @@ export const useRiskAssessmentStore = create<RiskAssessmentStore>((set, get) => 
         isAssessing: false,
       });
     }
+  },
+
+  addRiskAssessment: (assessment: DisasterRiskAssessment) => {
+    const locationKey = `${assessment.location.lat.toFixed(4)},${assessment.location.lon.toFixed(4)}`;
+    set(state => ({
+      riskAssessments: new Map(state.riskAssessments.set(locationKey, assessment))
+    }));
   },
 
   getRiskByLocation: (locationKey: string) => {
