@@ -22,51 +22,63 @@ export default function HomePage() {
 
   useEffect(() => {
     let phi = 0
-    let width = 0
-    const onResize = () => canvasRef.current && (width = canvasRef.current.offsetWidth)
-    
-    window.addEventListener('resize', onResize)
-    onResize()
+    let globe: any = null
 
-    if (canvasRef.current) {
-      const globe = createGlobe(canvasRef.current, {
-        devicePixelRatio: 2,
-        width: width * 2,
-        height: width * 2,
-        phi: 0,
-        theta: 0,
-        dark: 1,
-        diffuse: 1.2,
-        mapSamples: 16000,
-        mapBrightness: 6,
-        baseColor: [0.3, 0.3, 0.3],
-        markerColor: [0.1, 0.8, 1],
-        glowColor: [1, 1, 1],
-        markers: [
-          // Sample disaster locations
-          { location: [37.7595, -122.4367], size: 0.03 }, // San Francisco
-          { location: [40.7128, -74.0060], size: 0.03 },  // New York
-          { location: [35.6762, 139.6503], size: 0.03 },  // Tokyo
-          { location: [51.5074, -0.1278], size: 0.03 },   // London
-          { location: [-33.8688, 151.2093], size: 0.03 }, // Sydney
-        ],
-        onRender: (state) => {
-          // Called on every animation frame.
-          // `state` will be an empty object, return updated params.
-          state.phi = phi
-          phi += 0.01
+    const initializeGlobe = () => {
+      if (canvasRef.current) {
+        try {
+          globe = createGlobe(canvasRef.current, {
+            devicePixelRatio: 1,
+            width: 600,
+            height: 600,
+            phi: 0,
+            theta: 0,
+            dark: 1,
+            diffuse: 1.2,
+            mapSamples: 16000,
+            mapBrightness: 6,
+            baseColor: [0.3, 0.3, 0.3],
+            markerColor: [0.1, 0.8, 1],
+            glowColor: [1, 1, 1],
+            scale: 1,
+            offset: [0, 0],
+            markers: [
+              // Sample disaster locations
+              { location: [37.7595, -122.4367], size: 0.03 }, // San Francisco
+              { location: [40.7128, -74.0060], size: 0.03 },  // New York
+              { location: [35.6762, 139.6503], size: 0.03 },  // Tokyo
+              { location: [51.5074, -0.1278], size: 0.03 },   // London
+              { location: [-33.8688, 151.2093], size: 0.03 }, // Sydney
+            ],
+            onRender: (state) => {
+              state.phi = phi
+              phi += 0.01
+            }
+          })
+
+          // Make globe visible with a smooth fade-in
+          setTimeout(() => {
+            if (canvasRef.current) {
+              canvasRef.current.style.opacity = '0.9'
+            }
+          }, 800)
+        } catch (error) {
+          console.error('Globe initialization failed:', error)
         }
-      })
+      }
+    }
 
-      setTimeout(() => {
-        if (canvasRef.current) {
-          canvasRef.current.style.opacity = '1'
+    // Initialize with a delay to ensure DOM is ready
+    const timer = setTimeout(initializeGlobe, 200)
+
+    return () => {
+      clearTimeout(timer)
+      if (globe) {
+        try {
+          globe.destroy()
+        } catch (error) {
+          console.warn('Error destroying globe:', error)
         }
-      })
-
-      return () => {
-        globe.destroy()
-        window.removeEventListener('resize', onResize)
       }
     }
   }, [])
@@ -83,12 +95,12 @@ export default function HomePage() {
             </div>
             <div className="flex items-center space-x-4">
               <Link to="/auth/signin">
-                <Button variant="outline" className="text-white border-white/20 hover:bg-white/10">
+                <Button variant="outline" className="text-white border-white/30 hover:bg-white/10 hover:text-white bg-transparent">
                   Sign In
                 </Button>
               </Link>
               <Link to="/auth/signup">
-                <Button className="bg-blue-600 hover:bg-blue-700 text-white">
+                <Button className="bg-blue-600 hover:bg-blue-700 text-white border-0">
                   Get Started
                 </Button>
               </Link>
@@ -100,8 +112,8 @@ export default function HomePage() {
       {/* Hero Section */}
       <section className="relative overflow-hidden">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
-            <div className="space-y-8">
+          <div className="grid lg:grid-cols-2 gap-12 items-center min-h-[600px]">
+            <div className="space-y-8 flex flex-col justify-center">
               <div className="space-y-4">
                 <Badge variant="secondary" className="bg-blue-500/20 text-blue-300 border-blue-500/30">
                   <Zap className="w-3 h-3 mr-1" />
@@ -125,7 +137,7 @@ export default function HomePage() {
                     Start Protecting Lives
                   </Button>
                 </Link>
-                <Button size="lg" variant="outline" className="text-white border-white/20 hover:bg-white/10">
+                <Button size="lg" variant="outline" className="text-white border-white/30 hover:bg-white/10 hover:text-white bg-transparent">
                   View Live Demo
                 </Button>
               </div>
@@ -142,11 +154,20 @@ export default function HomePage() {
               </div>
             </div>
 
-            <div className="relative">
+            <div className="relative w-full h-[600px] flex items-center justify-center">
+              {/* Background glow effect */}
+              <div className="absolute inset-0 bg-gradient-to-r from-blue-500/20 to-purple-500/20 rounded-full blur-2xl scale-75"></div>
+              
               <canvas
                 ref={canvasRef}
-                style={{ width: '100%', height: '100%', opacity: 0 }}
-                className="transition-opacity duration-1000 max-w-[600px] max-h-[600px]"
+                width={600}
+                height={600}
+                style={{ 
+                  width: '600px', 
+                  height: '600px', 
+                  opacity: 0
+                }}
+                className="relative z-10 transition-opacity duration-1000"
               />
             </div>
           </div>
@@ -259,7 +280,7 @@ export default function HomePage() {
                   Create Free Account
                 </Button>
               </Link>
-              <Button size="lg" variant="outline" className="text-white border-white/20 hover:bg-white/10">
+              <Button size="lg" variant="outline" className="text-white border-white/30 hover:bg-white/10 hover:text-white bg-transparent">
                 Request Demo
               </Button>
             </div>
