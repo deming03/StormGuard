@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
-import { Routes, Route, useNavigate } from 'react-router-dom'
+import { Routes, Route, useNavigate, useLocation } from 'react-router-dom'
+import CreateIncidentReportForm from '@/components/CreateIncidentReportForm'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
@@ -55,7 +56,10 @@ function DisastersListView() {
           <h1 className="text-3xl font-bold">Disaster Management</h1>
           <p className="text-muted-foreground">Monitor and manage active disasters</p>
         </div>
-        <Button onClick={() => navigate('create')} className="flex items-center gap-2">
+        <Button onClick={() => {
+          console.log('Report Disaster button clicked')
+          navigate('create')
+        }} className="flex items-center gap-2">
           <Plus className="h-4 w-4" />
           Report Disaster
         </Button>
@@ -310,6 +314,23 @@ function DisastersMapView() {
 }
 
 export default function DisastersPage() {
+  const location = useLocation()
+  
+  // Check if we're on a sub-route
+  const isCreateRoute = location.pathname.includes('/create')
+  const isDetailRoute = location.pathname.includes('/disasters/') && !isCreateRoute && location.pathname !== '/dashboard/disasters'
+
+  // If we're on create route, show the form
+  if (isCreateRoute) {
+    return <CreateIncidentReportForm />
+  }
+  
+  // If we're on detail route, show the detail view
+  if (isDetailRoute) {
+    return <div>Disaster Details (TODO)</div>
+  }
+
+  // Otherwise show the main disasters view
   return (
     <div>
       <Tabs defaultValue="list" className="space-y-6">
@@ -334,11 +355,6 @@ export default function DisastersPage() {
           <DisastersMapView />
         </TabsContent>
       </Tabs>
-
-      <Routes>
-        <Route path="create" element={<div>Create Disaster Form (TODO)</div>} />
-        <Route path=":id" element={<div>Disaster Details (TODO)</div>} />
-      </Routes>
     </div>
   )
 }

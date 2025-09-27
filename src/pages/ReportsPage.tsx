@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
-import { Routes, Route, useNavigate } from 'react-router-dom'
+import { Routes, Route, useNavigate, useLocation } from 'react-router-dom'
+import CreateIncidentReportForm from '@/components/CreateIncidentReportForm'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
@@ -422,6 +423,23 @@ function IncidentReportsMapView() {
 }
 
 export default function ReportsPage() {
+  const location = useLocation()
+  
+  // Check if we're on a sub-route
+  const isCreateRoute = location.pathname.includes('/create')
+  const isDetailRoute = location.pathname.includes('/reports/') && !isCreateRoute && location.pathname !== '/dashboard/reports'
+
+  // If we're on create route, show the form
+  if (isCreateRoute) {
+    return <CreateIncidentReportForm />
+  }
+  
+  // If we're on detail route, show the detail view
+  if (isDetailRoute) {
+    return <div>Incident Report Details (TODO)</div>
+  }
+
+  // Otherwise show the main reports view
   return (
     <div>
       <Tabs defaultValue="list" className="space-y-6">
@@ -446,11 +464,6 @@ export default function ReportsPage() {
           <IncidentReportsMapView />
         </TabsContent>
       </Tabs>
-
-      <Routes>
-        <Route path="create" element={<div>Create Incident Report Form (TODO)</div>} />
-        <Route path=":id" element={<div>Incident Report Details (TODO)</div>} />
-      </Routes>
     </div>
   )
 }

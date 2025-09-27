@@ -95,10 +95,6 @@ function MedicalResourcesListView() {
           <h1 className="text-3xl font-bold">Medical Resources</h1>
           <p className="text-muted-foreground">Find nearby medical facilities and supplies</p>
         </div>
-        <Button onClick={() => navigate('create')} className="flex items-center gap-2">
-          <Plus className="h-4 w-4" />
-          Add Resource
-        </Button>
       </div>
 
       {/* Stats */}

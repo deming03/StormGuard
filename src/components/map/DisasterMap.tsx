@@ -26,7 +26,7 @@ export default function DisasterMap({
   disasters = [], 
   medicalResources = [],
   showMedicalResources = true,
-  initialViewport = { longitude: -74.0060, latitude: 40.7128, zoom: 10 },
+  initialViewport = { longitude: 101.6559, latitude: 2.9213, zoom: 15 }, // Centered on Rekascape
   onDisasterClick,
   onResourceClick,
   className 
@@ -34,28 +34,126 @@ export default function DisasterMap({
   const [selectedDisaster, setSelectedDisaster] = useState<DisasterWithLocation | null>(null)
   const [selectedResource, setSelectedResource] = useState<MedicalResourceWithLocation | null>(null)
   const [userLocation, setUserLocation] = useState<[number, number] | null>(null)
+  const [mapError, setMapError] = useState<string | null>(null)
+  const [locationError, setLocationError] = useState<string | null>(null)
+  const [isTrackingLocation, setIsTrackingLocation] = useState(false)
   const [viewState, setViewState] = useState({
     longitude: initialViewport.longitude,
     latitude: initialViewport.latitude,
     zoom: initialViewport.zoom,
   })
+  const [hasUserLocation, setHasUserLocation] = useState(false)
+  const watchIdRef = useRef<number | null>(null)
 
   const mapRef = useRef<any>(null)
 
-  // Get user's location
+  // Enhanced location tracking
   useEffect(() => {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
+    if (!navigator.geolocation) {
+      setLocationError('Geolocation is not supported by this browser')
+      return
+    }
+
+    // Get initial location and center map
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const location: [number, number] = [position.coords.longitude, position.coords.latitude]
+        setUserLocation(location)
+        setLocationError(null)
+        setHasUserLocation(true)
+        
+        // Center map on user's real-time location with higher zoom
+        setViewState({
+          longitude: location[0],
+          latitude: location[1],
+          zoom: 16
+        })
+
+        // Update stores with real-time location
+        updateStoresWithUserLocation(location)
+      },
+      (error) => {
+        let errorMessage = 'Unable to retrieve your location'
+        switch (error.code) {
+          case error.PERMISSION_DENIED:
+            errorMessage = 'Location access denied. Please enable location permissions.'
+            break
+          case error.POSITION_UNAVAILABLE:
+            errorMessage = 'Location information is unavailable.'
+            break
+          case error.TIMEOUT:
+            errorMessage = 'Location request timed out.'
+            break
+        }
+        setLocationError(errorMessage)
+        console.error('Geolocation error:', error)
+      },
+      {
+        enableHighAccuracy: true,
+        timeout: 10000,
+        maximumAge: 60000
+      }
+    )
+
+    // Start continuous location tracking
+    if (isTrackingLocation) {
+      watchIdRef.current = navigator.geolocation.watchPosition(
         (position) => {
           const location: [number, number] = [position.coords.longitude, position.coords.latitude]
           setUserLocation(location)
+          
+          // Update stores when location changes
+          updateStoresWithUserLocation(location)
         },
         (error) => {
-          console.log('Error getting location:', error)
+          console.error('Location tracking error:', error)
+        },
+        {
+          enableHighAccuracy: true,
+          timeout: 5000,
+          maximumAge: 30000
         }
       )
     }
-  }, [])
+
+    // Cleanup function
+    return () => {
+      if (watchIdRef.current !== null) {
+        navigator.geolocation.clearWatch(watchIdRef.current)
+        watchIdRef.current = null
+      }
+    }
+  }, [isTrackingLocation])
+
+  // Function to update stores with user's real-time location
+  const updateStoresWithUserLocation = (location: [number, number]) => {
+    // Import stores dynamically to avoid circular dependencies
+    import('@/store/medicalResourceStore').then(({ useMedicalResourceStore }) => {
+      // Update medical resources with 5km radius
+      useMedicalResourceStore.getState().updateResourcesForLocation(location)
+    })
+    
+    import('@/store/disasterStore').then(({ useDisasterStore }) => {
+      // Update disasters with 2km radius
+      useDisasterStore.getState().updateDisastersForLocation(location)
+    })
+  }
+
+  // Function to start/stop location tracking
+  const toggleLocationTracking = () => {
+    setIsTrackingLocation(!isTrackingLocation)
+  }
+
+  // Function to center map on user location
+  const centerOnUserLocation = () => {
+    if (userLocation) {
+      setViewState({
+        longitude: userLocation[0],
+        latitude: userLocation[1],
+        zoom: 16
+      })
+    }
+  }
 
   // Create heat map data for disaster intensity
   const heatmapData = {
@@ -119,25 +217,90 @@ export default function DisasterMap({
 
   return (
     <div className={`relative w-full h-full ${className}`}>
-      <Map
-        ref={mapRef}
-        {...viewState}
-        onMove={evt => setViewState(evt.viewState)}
-        style={{width: '100%', height: '100%'}}
-        mapStyle="mapbox://styles/mapbox/satellite-streets-v12"
-        mapboxAccessToken={import.meta.env.VITE_MAPBOX_TOKEN}
-        onClick={() => {
-          setSelectedDisaster(null)
-          setSelectedResource(null)
-        }}
-      >
+      {/* Demo Mode Banner */}
+      {!import.meta.env.VITE_MAPBOX_TOKEN && (
+        <div className="absolute top-4 left-4 right-4 z-10">
+          <div className="bg-blue-500/90 text-white px-4 py-2 rounded-lg text-sm">
+            🗺️ <strong>Demo Mode:</strong> Using demo Mapbox token. For production, configure VITE_MAPBOX_TOKEN.
+          </div>
+        </div>
+      )}
+
+      {/* Location Error Banner */}
+      {locationError && (
+        <div className="absolute top-16 left-4 right-4 z-10">
+          <div className="bg-red-500/90 text-white px-4 py-2 rounded-lg text-sm">
+            📍 <strong>Location Error:</strong> {locationError}
+          </div>
+        </div>
+      )}
+
+      {/* Location Controls */}
+      <div className="absolute top-4 right-4 z-10 flex flex-col gap-2">
+        <Button
+          onClick={centerOnUserLocation}
+          disabled={!userLocation}
+          className="bg-white/90 hover:bg-white text-gray-800 shadow-lg"
+          size="sm"
+        >
+          <Navigation className="h-4 w-4 mr-2" />
+          My Location
+        </Button>
+        
+        <Button
+          onClick={toggleLocationTracking}
+          className={`shadow-lg ${
+            isTrackingLocation 
+              ? 'bg-green-500/90 hover:bg-green-600 text-white' 
+              : 'bg-white/90 hover:bg-white text-gray-800'
+          }`}
+          size="sm"
+        >
+          <MapPin className="h-4 w-4 mr-2" />
+          {isTrackingLocation ? 'Stop Tracking' : 'Track Location'}
+        </Button>
+      </div>
+
+      {mapError ? (
+        <div className="flex items-center justify-center w-full h-full bg-gray-100">
+          <div className="text-center">
+            <AlertTriangle className="h-12 w-12 text-red-500 mx-auto mb-4" />
+            <h3 className="text-lg font-semibold mb-2">Map Loading Error</h3>
+            <p className="text-gray-600 mb-4">{mapError}</p>
+            <Button onClick={() => setMapError(null)}>
+              Retry
+            </Button>
+          </div>
+        </div>
+      ) : (
+        <Map
+          ref={mapRef}
+          {...viewState}
+          onMove={evt => setViewState(evt.viewState)}
+          style={{width: '100%', height: '100%'}}
+          mapStyle="mapbox://styles/mapbox/streets-v12"
+          mapboxAccessToken={import.meta.env.VITE_MAPBOX_TOKEN || "pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw"}
+          onError={(e) => setMapError(e.error?.message || 'Failed to load map')}
+          onClick={() => {
+            setSelectedDisaster(null)
+            setSelectedResource(null)
+          }}
+        >
         {/* Navigation Controls */}
-        <NavigationControl position="top-right" />
+        <NavigationControl position="bottom-right" />
         <GeolocateControl 
-          position="top-right" 
-          trackUserLocation={true}
+          position="bottom-right" 
+          trackUserLocation={isTrackingLocation}
+          showAccuracyCircle={true}
+          showUserLocation={true}
           onGeolocate={(e) => {
-            setUserLocation([e.coords.longitude, e.coords.latitude])
+            const location: [number, number] = [e.coords.longitude, e.coords.latitude]
+            setUserLocation(location)
+            setLocationError(null)
+          }}
+          onError={(error) => {
+            setLocationError('Failed to get your location')
+            console.error('GeolocateControl error:', error)
           }}
         />
 
@@ -155,7 +318,26 @@ export default function DisasterMap({
             latitude={userLocation[1]}
             anchor="center"
           >
-            <div className="w-4 h-4 bg-blue-500 border-2 border-white rounded-full shadow-lg animate-pulse" />
+            <div className="relative">
+              {/* Pulsing animation rings */}
+              <div className="absolute -inset-2 w-8 h-8 bg-blue-400/20 rounded-full animate-ping"></div>
+              <div className="absolute -inset-1 w-6 h-6 bg-blue-500/40 rounded-full animate-pulse"></div>
+              {/* Main location dot */}
+              <div className="relative w-4 h-4 bg-blue-600 rounded-full border-2 border-white shadow-lg">
+                <div className="absolute inset-0.5 w-3 h-3 bg-white rounded-full opacity-80"></div>
+              </div>
+              {/* Location accuracy indicator */}
+              {isTrackingLocation && (
+                <div className="absolute -bottom-8 left-1/2 transform -translate-x-1/2 bg-green-600 text-white px-2 py-1 rounded text-xs font-medium whitespace-nowrap shadow-lg">
+                  📍 Live Tracking
+                </div>
+              )}
+              {!isTrackingLocation && (
+                <div className="absolute -bottom-8 left-1/2 transform -translate-x-1/2 bg-blue-600 text-white px-2 py-1 rounded text-xs font-medium whitespace-nowrap shadow-lg">
+                  📍 Your Location
+                </div>
+              )}
+            </div>
           </Marker>
         )}
 
@@ -330,6 +512,7 @@ export default function DisasterMap({
           </Popup>
         )}
       </Map>
+      )}
     </div>
   )
 }
