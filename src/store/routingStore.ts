@@ -15,7 +15,7 @@ function selectBestRoute(routes: SafeRoute[], prioritizeSafety: boolean): SafeRo
   routes.forEach((route, index) => {
     console.log(`Route ${index + 1} (${route.type}):`, {
       safetyScore: route.safetyScore,
-      maxRiskLevel: route.maxRiskLevel,
+      maxRiskLevel: route.riskLevel,
       riskAreasEncountered: route.riskAreasEncountered,
       duration: Math.round(route.duration / 60),
       warnings: route.warnings.length
@@ -27,7 +27,7 @@ function selectBestRoute(routes: SafeRoute[], prioritizeSafety: boolean): SafeRo
     
     // First, try to find routes that completely avoid high-risk areas
     const safeRoutes = routes.filter(route => 
-      route.maxRiskLevel !== 'high' && route.maxRiskLevel !== 'extreme'
+      route.riskLevel !== 'high' && route.riskLevel !== 'extreme'
     );
     
     if (safeRoutes.length > 0) {

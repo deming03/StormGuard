@@ -60,6 +60,9 @@ export const generateDisastersNearLocation = (
         duration_estimate: '4-6 hours',
         improvement_probability: 0.6
       },
+      lstm_forecast: null,
+      created_by: null,
+      verified_by: null,
       response_teams_assigned: ['Emergency Response Team A', 'Local Fire Department'],
       evacuation_status: 'partial',
       is_verified: true,
@@ -105,6 +108,9 @@ export const generateDisastersNearLocation = (
         duration_estimate: '2-3 hours',
         improvement_probability: 0.8
       },
+      lstm_forecast: null,
+      created_by: null,
+      verified_by: null,
       response_teams_assigned: ['Utility Repair Team'],
       evacuation_status: 'none',
       is_verified: true,
@@ -152,6 +158,9 @@ export const generateDisastersNearLocation = (
         duration_estimate: '1 hour',
         improvement_probability: 0.9
       },
+      lstm_forecast: null,
+      created_by: null,
+      verified_by: null,
       response_teams_assigned: ['Police Traffic Unit', 'Ambulance'],
       evacuation_status: 'none',
       is_verified: true,
@@ -175,14 +184,20 @@ export const generateMedicalResourcesNearLocation = (
     {
       id: 'medical-realtime-1',
       name: 'Emergency Medical Clinic - Nearby',
-      resource_type: 'clinic',
+      resource_type: 'medical',
       description: 'Walk-in clinic providing emergency medical care, located close to your current position',
-      contact_phone: '+603-8000-1111',
-      contact_email: 'emergency@nearbymedical.com.my',
-      website: 'https://nearbymedical.com.my',
-      capacity: 30,
-      current_availability: 20,
       status: 'available',
+      capacity: 30,
+      current_usage: 10,
+      contact_info: {
+        phone: '+603-8000-1111',
+        email: 'emergency@nearbymedical.com.my',
+        website: 'https://nearbymedical.com.my'
+      },
+      specialties: ['emergency', 'general'],
+      available_24_7: true,
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
       location: {
         type: 'Point',
         coordinates: [
@@ -191,110 +206,72 @@ export const generateMedicalResourcesNearLocation = (
         ] // Within 20% of radius
       },
       address: `Near your location (${userLat.toFixed(4)}, ${userLng.toFixed(4)})`,
-      operating_hours: {
-        monday: '24/7',
-        tuesday: '24/7',
-        wednesday: '24/7',
-        thursday: '24/7',
-        friday: '24/7',
-        saturday: '24/7',
-        sunday: '24/7'
-      },
-      services_offered: ['Emergency Care', 'First Aid', 'Minor Surgery', 'Consultation'],
-      equipment_available: ['Defibrillator', 'X-Ray', 'Ultrasound', 'ECG'],
-      emergency_contact: '+603-8000-1111',
-      verification_documents: [],
-      added_by: 'system',
-      verified_by: 'admin',
-      is_verified: true,
-      created_at: new Date().toISOString(),
-      updated_at: new Date().toISOString()
     },
     {
       id: 'medical-realtime-2',
       name: 'Local Pharmacy Plus',
-      resource_type: 'pharmacy',
+      resource_type: 'medical',
       description: '24/7 pharmacy with emergency medications and basic medical supplies, very close to you',
-      contact_phone: '+603-8000-2222',
-      contact_email: 'info@localpharmacy.com.my',
-      capacity: null,
-      current_availability: null,
       status: 'available',
+      capacity: null,
+      current_usage: 0,
+      contact_info: {
+        phone: '+603-8000-2222',
+        email: 'info@localpharmacy.com.my'
+      },
+      specialties: ['pharmacy', 'emergency_medications'],
+      available_24_7: true,
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
       location: {
         type: 'Point',
         coordinates: [
           userLng + randomOffset(radiusKm * 0.1)[0], 
           userLat + randomOffset(radiusKm * 0.1)[1]
         ] // Within 10% of radius
-      },
-      address: `Very close to your location (${userLat.toFixed(4)}, ${userLng.toFixed(4)})`,
-      operating_hours: {
-        monday: '24/7',
-        tuesday: '24/7',
-        wednesday: '24/7',
-        thursday: '24/7',
-        friday: '24/7',
-        saturday: '24/7',
-        sunday: '24/7'
-      },
-      services_offered: ['Prescription Dispensing', 'Emergency Medications', 'Health Consultation'],
-      equipment_available: ['Blood Pressure Monitor', 'Thermometer', 'First Aid Supplies'],
-      emergency_contact: '+603-8000-2222',
-      verification_documents: [],
-      added_by: 'system',
-      verified_by: 'admin',
-      is_verified: true,
-      created_at: new Date().toISOString(),
-      updated_at: new Date().toISOString()
+      }
     },
     {
       id: 'medical-realtime-3',
       name: 'Mobile Emergency Unit',
-      resource_type: 'emergency_services',
+      resource_type: 'rescue',
       description: 'Mobile emergency response unit currently stationed near your area',
-      contact_phone: '+603-8000-3333',
-      contact_email: 'mobile@emergency.gov.my',
-      capacity: 5,
-      current_availability: 4,
       status: 'available',
+      capacity: 5,
+      current_usage: 1,
+      contact_info: {
+        phone: '+603-8000-3333',
+        email: 'mobile@emergency.gov.my'
+      },
+      specialties: ['emergency_response', 'ambulance'],
+      available_24_7: true,
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
       location: {
         type: 'Point',
         coordinates: [
           userLng + randomOffset(radiusKm * 0.3)[0], 
           userLat + randomOffset(radiusKm * 0.3)[1]
         ] // Within 30% of radius
-      },
-      address: `Mobile unit near your location (${userLat.toFixed(4)}, ${userLng.toFixed(4)})`,
-      operating_hours: {
-        monday: '24/7',
-        tuesday: '24/7',
-        wednesday: '24/7',
-        thursday: '24/7',
-        friday: '24/7',
-        saturday: '24/7',
-        sunday: '24/7'
-      },
-      services_offered: ['Emergency Response', 'Ambulance Services', 'First Aid', 'Medical Transport'],
-      equipment_available: ['Ambulance', 'Defibrillator', 'Oxygen Tanks', 'Emergency Medications'],
-      emergency_contact: '+603-8000-3333',
-      verification_documents: [],
-      added_by: 'system',
-      verified_by: 'admin',
-      is_verified: true,
-      created_at: new Date().toISOString(),
-      updated_at: new Date().toISOString()
+      }
     },
     {
       id: 'medical-realtime-4',
       name: 'General Hospital - Main Campus',
-      resource_type: 'hospital',
+      resource_type: 'medical',
       description: 'Full-service hospital with emergency department, ICU, and specialized medical services',
-      contact_phone: '+603-8000-4444',
-      contact_email: 'info@generalhospital.com.my',
-      website: 'https://generalhospital.com.my',
-      capacity: 200,
-      current_availability: 150,
       status: 'available',
+      capacity: 200,
+      current_usage: 50,
+      contact_info: {
+        phone: '+603-8000-4444',
+        email: 'info@generalhospital.com.my',
+        website: 'https://generalhospital.com.my'
+      },
+      specialties: ['emergency', 'surgery', 'icu'],
+      available_24_7: true,
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
       location: {
         type: 'Point',
         coordinates: [
@@ -302,36 +279,23 @@ export const generateMedicalResourcesNearLocation = (
           userLat + randomOffset(radiusKm * 0.8)[1]
         ] // Within 80% of radius
       },
-      address: `Hospital near your location (${userLat.toFixed(4)}, ${userLng.toFixed(4)})`,
-      operating_hours: {
-        monday: '24/7',
-        tuesday: '24/7',
-        wednesday: '24/7',
-        thursday: '24/7',
-        friday: '24/7',
-        saturday: '24/7',
-        sunday: '24/7'
-      },
-      services_offered: ['Emergency Care', 'Surgery', 'ICU', 'Cardiology', 'Pediatrics', 'Radiology'],
-      equipment_available: ['MRI', 'CT Scan', 'X-Ray', 'Ultrasound', 'ECG', 'Dialysis'],
-      emergency_contact: '+603-8000-4444',
-      verification_documents: [],
-      added_by: 'system',
-      verified_by: 'admin',
-      is_verified: true,
-      created_at: new Date().toISOString(),
-      updated_at: new Date().toISOString()
     },
     {
       id: 'medical-realtime-5',
       name: 'Community Health Center',
-      resource_type: 'clinic',
+      resource_type: 'medical',
       description: 'Community health center providing primary healthcare and preventive care services',
-      contact_phone: '+603-8000-5555',
-      contact_email: 'info@communityhealthcenter.com.my',
-      capacity: 50,
-      current_availability: 35,
       status: 'available',
+      capacity: 50,
+      current_usage: 15,
+      contact_info: {
+        phone: '+603-8000-5555',
+        email: 'info@communityhealthcenter.com.my'
+      },
+      specialties: ['primary_care', 'preventive'],
+      available_24_7: false,
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
       location: {
         type: 'Point',
         coordinates: [
@@ -339,138 +303,80 @@ export const generateMedicalResourcesNearLocation = (
           userLat + randomOffset(radiusKm * 0.5)[1]
         ] // Within 50% of radius
       },
-      address: `Community center near your location (${userLat.toFixed(4)}, ${userLng.toFixed(4)})`,
-      operating_hours: {
-        monday: '8:00 AM - 8:00 PM',
-        tuesday: '8:00 AM - 8:00 PM',
-        wednesday: '8:00 AM - 8:00 PM',
-        thursday: '8:00 AM - 8:00 PM',
-        friday: '8:00 AM - 8:00 PM',
-        saturday: '9:00 AM - 5:00 PM',
-        sunday: '9:00 AM - 5:00 PM'
-      },
-      services_offered: ['Primary Care', 'Vaccination', 'Health Screening', 'Maternal Care'],
-      equipment_available: ['Blood Pressure Monitor', 'Glucose Meter', 'Thermometer', 'Basic Lab'],
-      emergency_contact: '+603-8000-5555',
-      verification_documents: [],
-      added_by: 'system',
-      verified_by: 'admin',
-      is_verified: true,
-      created_at: new Date().toISOString(),
-      updated_at: new Date().toISOString()
     },
     {
       id: 'medical-realtime-6',
       name: 'Guardian Pharmacy 24/7',
-      resource_type: 'pharmacy',
+      resource_type: 'medical',
       description: 'Round-the-clock pharmacy with comprehensive medication inventory and health products',
-      contact_phone: '+603-8000-6666',
-      contact_email: 'info@guardianpharmacy.com.my',
-      website: 'https://guardian.com.my',
-      capacity: null,
-      current_availability: null,
       status: 'available',
+      capacity: null,
+      current_usage: 0,
+      contact_info: {
+        phone: '+603-8000-6666',
+        email: 'info@guardianpharmacy.com.my',
+        website: 'https://guardian.com.my'
+      },
+      specialties: ['pharmacy', '24_7'],
+      available_24_7: true,
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
       location: {
         type: 'Point',
         coordinates: [
           userLng + randomOffset(radiusKm * 0.4)[0], 
           userLat + randomOffset(radiusKm * 0.4)[1]
         ] // Within 40% of radius
-      },
-      address: `Pharmacy near your location (${userLat.toFixed(4)}, ${userLng.toFixed(4)})`,
-      operating_hours: {
-        monday: '24/7',
-        tuesday: '24/7',
-        wednesday: '24/7',
-        thursday: '24/7',
-        friday: '24/7',
-        saturday: '24/7',
-        sunday: '24/7'
-      },
-      services_offered: ['Prescription Dispensing', 'Health Screening', 'Vaccination', 'Medical Consultation'],
-      equipment_available: ['Blood Pressure Monitor', 'Glucose Meter', 'Thermometer', 'Weight Scale'],
-      emergency_contact: '+603-8000-6666',
-      verification_documents: [],
-      added_by: 'system',
-      verified_by: 'admin',
-      is_verified: true,
-      created_at: new Date().toISOString(),
-      updated_at: new Date().toISOString()
+      }
     },
     {
       id: 'medical-realtime-7',
       name: 'Specialist Medical Center',
-      resource_type: 'hospital',
+      resource_type: 'medical',
       description: 'Private medical center with specialized treatments and advanced medical technology',
-      contact_phone: '+603-8000-7777',
-      contact_email: 'info@specialistmedical.com.my',
-      website: 'https://specialistmedical.com.my',
-      capacity: 120,
-      current_availability: 80,
       status: 'available',
+      capacity: 120,
+      current_usage: 40,
+      contact_info: {
+        phone: '+603-8000-7777',
+        email: 'info@specialistmedical.com.my',
+        website: 'https://specialistmedical.com.my'
+      },
+      specialties: ['cardiology', 'neurology', 'oncology'],
+      available_24_7: true,
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
       location: {
         type: 'Point',
         coordinates: [
           userLng + randomOffset(radiusKm * 0.7)[0], 
           userLat + randomOffset(radiusKm * 0.7)[1]
         ] // Within 70% of radius
-      },
-      address: `Specialist center near your location (${userLat.toFixed(4)}, ${userLng.toFixed(4)})`,
-      operating_hours: {
-        monday: '24/7',
-        tuesday: '24/7',
-        wednesday: '24/7',
-        thursday: '24/7',
-        friday: '24/7',
-        saturday: '24/7',
-        sunday: '24/7'
-      },
-      services_offered: ['Specialist Care', 'Surgery', 'Diagnostics', 'Emergency Care', 'Rehabilitation'],
-      equipment_available: ['MRI', 'CT Scan', 'PET Scan', 'X-Ray', 'Ultrasound', 'Laboratory'],
-      emergency_contact: '+603-8000-7777',
-      verification_documents: [],
-      added_by: 'system',
-      verified_by: 'admin',
-      is_verified: true,
-      created_at: new Date().toISOString(),
-      updated_at: new Date().toISOString()
+      }
     },
     {
       id: 'medical-realtime-8',
       name: 'Emergency Response Station',
-      resource_type: 'emergency_services',
+      resource_type: 'rescue',
       description: 'Dedicated emergency response station with ambulance services and rapid response team',
-      contact_phone: '+603-8000-8888',
-      contact_email: 'emergency@responsestation.gov.my',
-      capacity: 10,
-      current_availability: 8,
       status: 'available',
+      capacity: 10,
+      current_usage: 2,
+      contact_info: {
+        phone: '+603-8000-8888',
+        email: 'emergency@responsestation.gov.my'
+      },
+      specialties: ['emergency_response', 'ambulance', 'rescue'],
+      available_24_7: true,
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
       location: {
         type: 'Point',
         coordinates: [
           userLng + randomOffset(radiusKm * 0.6)[0], 
           userLat + randomOffset(radiusKm * 0.6)[1]
         ] // Within 60% of radius
-      },
-      address: `Emergency station near your location (${userLat.toFixed(4)}, ${userLng.toFixed(4)})`,
-      operating_hours: {
-        monday: '24/7',
-        tuesday: '24/7',
-        wednesday: '24/7',
-        thursday: '24/7',
-        friday: '24/7',
-        saturday: '24/7',
-        sunday: '24/7'
-      },
-      services_offered: ['Emergency Response', 'Ambulance Services', 'Fire Rescue', 'Medical Transport', 'Disaster Response'],
-      equipment_available: ['Ambulance Fleet', 'Fire Trucks', 'Rescue Equipment', 'Medical Supplies', 'Communication Systems'],
-      emergency_contact: '+603-8000-8888',
-      verification_documents: [],
-      added_by: 'system',
-      verified_by: 'admin',
-      is_verified: true,
-      created_at: new Date().toISOString(),
-      updated_at: new Date().toISOString()
+      }
     }
   ]
   

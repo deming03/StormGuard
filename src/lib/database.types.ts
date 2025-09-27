@@ -523,6 +523,7 @@ export interface ChatMessage {
 // Notification preferences structure
 export interface NotificationPreferences {
   email: boolean
+  push: boolean
   sms: boolean
   disasters: boolean
   team_updates: boolean
@@ -536,10 +537,10 @@ export interface NotificationPreferences {
 export interface MedicalResource {
   id: string
   name: string
-  type: ResourceType
+  resource_type: ResourceType
   description: string | null
   status: ResourceStatus
-  capacity: number
+  capacity: number | null
   current_usage: number
   location: string // GeoJSON Point as string
   contact_info: Json | null

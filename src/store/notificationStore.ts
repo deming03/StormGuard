@@ -335,7 +335,7 @@ export const useNotificationStore = create<NotificationStore>()(
           event: '*',
           schema: 'public',
           table: 'notifications',
-          filter: `user_id=eq.${supabase.auth.getUser().then(({ data: { user } }) => user?.id)}`
+          filter: `user_id=eq.${supabase.auth.getUser().then(({ data: { user } }: any) => user?.id)}`
         }, (payload: any) => {
           const { eventType, new: newRecord, old: oldRecord } = payload
           
