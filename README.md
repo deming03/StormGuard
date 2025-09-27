@@ -1,12 +1,10 @@
 # 🌍 StormGuard
-
+# by team Sirap Bandung
 StormGuard addresses the critical challenges of disaster response, resource allocation, and real-time alerts by combining cutting-edge AI technology with intuitive user interfaces and robust backend infrastructure.
-
-![Platform Screenshot](docs/screenshot.png)
 
 ## 📋 Overview
 
-This system addresses the critical challenges of disaster response, resource allocation, and real-time alerts by combining cutting-edge AI technology with intuitive user interfaces and robust backend infrastructure.
+StormGuard addresses the critical challenges of disaster response, resource allocation, and real-time alerts by combining cutting-edge AI technology with intuitive user interfaces and robust backend infrastructure.
 
 ## ✨ Features
 
@@ -16,35 +14,23 @@ This system addresses the critical challenges of disaster response, resource all
 - Live disaster monitoring with real-time updates
 - Heat maps for disaster intensity visualization
 
-### 🤖 AI-Powered Predictions
-- Google Gemini integration for intelligent analysis
-- LSTM models for time-series disaster forecasting
-- Decision trees for response prioritization
-- Misinformation detection for community reports
+### 🌤️ Weather Forecast
+- Real-time and forecasted weather data integrated from OpenWeather API
+- Key parameters like rainfall, wind speed, and temperature displayed on maps
+- Alerts for severe weather conditions to help users plan ahead
+- Data structured for easy AI processing and visualization
 
-### 🏥 Medical Resource Discovery
-- Location-based resource finding with radius search
-- Real-time availability tracking
-- Interactive maps showing nearby medical facilities
-- Resource verification and rating system
+### 🤖 AI Analysis
+- Google Gemini AI analyzes weather and disaster data for risk assessment
+- Predicts potential hazards like floods or storms based on historical and current data
+- Classifies locations by risk levels: High, Medium, or Low
+- Supports decision-making for safe navigation and emergency response
 
-### 📱 In-App Notifications
-- Real-time alert system with severity filtering
-- Location-based notifications
-- Customizable notification preferences
-- Multi-severity alert management
-
-### 💬 Multilingual AI Chatbot
-- Powered by Google Gemini AI
-- Support for multiple languages (EN, ES, FR, ZH, AR)
-- Context-aware emergency assistance
-- 24/7 automated support
-
-### 📸 Crowdsourced Incident Reports
-- Geo-tagged photo and video submissions
-- Community verification system
-- AI-powered credibility analysis
-- Upvoting and comment system
+### 🗺️ Smart Routing
+- Calculates safest routes by avoiding high-risk or flooded areas
+- Dynamic rerouting in real time based on disaster and traffic updates
+- Visual representation of high-risk zones on the map
+-Prioritizes both safety and efficiency for normal users, delivery, and emergency services
 
 ## 🛠️ Tech Stack
 
@@ -68,9 +54,6 @@ This system addresses the critical challenges of disaster response, resource all
 
 ### AI & Machine Learning
 - **Primary AI**: Google Gemini API
-- **ML Framework**: TensorFlow.js for client-side processing
-- **Time Series**: LSTM models for forecasting
-- **Decision Support**: Custom algorithms for resource optimization
 
 ### Development & Deployment
 - **Language**: TypeScript for type safety
@@ -157,20 +140,6 @@ src/
 └── assets/             # Static assets
 ```
 
-## 🗄️ Database Schema
-
-The system uses PostgreSQL with PostGIS for geospatial capabilities:
-
-### Core Tables
-- **profiles** - User profiles with roles and preferences
-- **disasters** - Disaster records with location and severity
-- **medical_resources** - Location-based medical facilities
-- **incident_reports** - Community-submitted incident reports
-- **emergency_teams** - Response teams and deployments
-- **notifications** - User notification system
-- **chatbot_conversations** - AI chat history
-- **ai_predictions** - ML predictions and analysis
-
 ## 🌐 API Integration
 
 ### Supabase Functions
@@ -193,18 +162,12 @@ The system uses PostgreSQL with PostGIS for geospatial capabilities:
 
 ## 🎯 Key Features Implementation
 
-### Real-time Disaster Tracking
-- WebSocket connections through Supabase
-- Live map updates with disaster markers
-- Heat map visualization for intensity
-- Automated severity classification
-
-### Medical Resource Discovery
-- Radius-based location search
-- Real-time availability status
-- Interactive resource mapping
-- User-generated resource additions
-
+### Smart Routing
+- Integrates real-time disaster and weather data for route planning
+- Highlights high-risk or flooded areas on the map
+- Automatically calculates the safest and fastest routes
+- Dynamic rerouting to avoid hazards and delays
+- 
 ### AI-Powered Chatbot
 - Multi-language support (5+ languages)
 - Context-aware emergency responses
@@ -218,4 +181,4 @@ The system uses PostgreSQL with PostGIS for geospatial capabilities:
 - Community moderation system
 
 
-**Last Updated**: September 2025
+**Last Updated**: September 2025 by team Sirap Bandung
