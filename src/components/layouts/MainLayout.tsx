@@ -29,7 +29,6 @@ const navigation = [
   { name: 'Dashboard', href: '/dashboard', icon: Home },
   { name: 'Disasters', href: '/dashboard/disasters', icon: AlertTriangle },
   { name: 'Medical Resources', href: '/dashboard/medical-resources', icon: Heart },
-  { name: 'Reports', href: '/dashboard/reports', icon: FileText },
   { name: 'AI Chatbot', href: '/dashboard/chatbot', icon: MessageCircle },
 ]
 

@@ -169,28 +169,22 @@ export default function DashboardPage() {
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-2">
-            <Link to="/dashboard/reports/create">
+            <Link to="/dashboard/disasters/create">
               <Button className="w-full justify-start" variant="outline">
-                <Plus className="mr-2 h-4 w-4" />
-                Report Incident
+                <AlertTriangle className="mr-2 h-4 w-4" />
+                Report Disaster
               </Button>
             </Link>
-            <Link to="/dashboard/medical-resources/create">
+            <Link to="/dashboard/medical-resources">
               <Button className="w-full justify-start" variant="outline">
                 <Heart className="mr-2 h-4 w-4" />
-                Add Medical Resource
+                Find Medical Resources
               </Button>
             </Link>
             <Link to="/dashboard/chatbot">
               <Button className="w-full justify-start" variant="outline">
                 <Activity className="mr-2 h-4 w-4" />
                 AI Assistant
-              </Button>
-            </Link>
-            <Link to="/dashboard/disasters/create">
-              <Button className="w-full justify-start" variant="outline">
-                <AlertTriangle className="mr-2 h-4 w-4" />
-                Create Disaster Alert
               </Button>
             </Link>
           </CardContent>
