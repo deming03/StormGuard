@@ -9,7 +9,6 @@ StormGuard addresses the critical challenges of disaster response, resource allo
 
 ### 🚨 Real-Time Disaster Tracking
 - Interactive 2D maps powered by Mapbox GL JS
-- 3D globe visualization using COBE
 - Live disaster monitoring with real-time updates
 - Heat maps for disaster intensity visualization
 
