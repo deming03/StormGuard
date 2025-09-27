@@ -2,25 +2,143 @@
 import { createClient } from '@supabase/supabase-js'
 import type { Database } from './database.types'
 
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || 'https://placeholder.supabase.co'
+const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || 'placeholder_key'
 
-if (!supabaseUrl || !supabaseAnonKey) {
+// Only throw error in production
+if (import.meta.env.PROD && (!import.meta.env.VITE_SUPABASE_URL || !import.meta.env.VITE_SUPABASE_ANON_KEY)) {
   throw new Error('Missing Supabase environment variables')
 }
 
-export const supabase = createClient<Database>(supabaseUrl, supabaseAnonKey, {
+// Create a mock client for demo mode
+const createMockClient = () => ({
   auth: {
-    autoRefreshToken: true,
-    persistSession: true,
-    detectSessionInUrl: true
-  },
-  realtime: {
-    params: {
-      eventsPerSecond: 10
+    signInWithPassword: ({ email, password }: { email: string; password: string }) => {
+      // Demo mode: simulate successful authentication
+      const mockUser = {
+        id: 'demo-user-' + Date.now(),
+        email,
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+        email_confirmed_at: new Date().toISOString(),
+        user_metadata: { full_name: 'Demo User' },
+        app_metadata: {},
+        aud: 'authenticated',
+        role: 'authenticated'
+      }
+      const mockSession = {
+        access_token: 'demo-token',
+        refresh_token: 'demo-refresh',
+        expires_in: 3600,
+        expires_at: Date.now() / 1000 + 3600,
+        token_type: 'bearer',
+        user: mockUser
+      }
+      return Promise.resolve({ 
+        data: { user: mockUser, session: mockSession }, 
+        error: null 
+      })
+    },
+    signUp: ({ email, password, options }: { email: string; password: string; options?: any }) => {
+      // Demo mode: simulate successful registration
+      const mockUser = {
+        id: 'demo-user-' + Date.now(),
+        email,
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+        email_confirmed_at: new Date().toISOString(),
+        user_metadata: options?.data || {},
+        app_metadata: {},
+        aud: 'authenticated',
+        role: 'authenticated'
+      }
+      const mockSession = {
+        access_token: 'demo-token',
+        refresh_token: 'demo-refresh',
+        expires_in: 3600,
+        expires_at: Date.now() / 1000 + 3600,
+        token_type: 'bearer',
+        user: mockUser
+      }
+      return Promise.resolve({ 
+        data: { user: mockUser, session: mockSession }, 
+        error: null 
+      })
+    },
+    signOut: () => Promise.resolve({ error: null }),
+    getUser: () => Promise.resolve({ 
+      data: { 
+        user: {
+          id: 'demo-user',
+          email: 'demo@example.com',
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString(),
+          user_metadata: { full_name: 'Demo User' }
+        }
+      }, 
+      error: null 
+    }),
+    getSession: () => Promise.resolve({ data: { session: null }, error: null }),
+    onAuthStateChange: (callback: Function) => {
+      // Return a subscription object
+      return { 
+        data: { 
+          subscription: { 
+            unsubscribe: () => {} 
+          } 
+        } 
+      }
     }
+  },
+  from: (table: string) => ({
+    select: () => ({ data: [], error: null }),
+    insert: (data: any) => {
+      // Simulate successful profile creation
+      if (table === 'profiles') {
+        return Promise.resolve({ 
+          data: { 
+            id: data.id,
+            email: data.email,
+            full_name: data.full_name,
+            role: data.role || 'citizen',
+            created_at: new Date().toISOString(),
+            updated_at: new Date().toISOString()
+          }, 
+          error: null 
+        })
+      }
+      return Promise.resolve({ data: data, error: null })
+    },
+    update: () => Promise.resolve({ data: null, error: null }),
+    delete: () => Promise.resolve({ data: null, error: null }),
+    eq: function(column: string, value: any) { return this },
+    single: function() { return Promise.resolve({ data: null, error: null }) }
+  }),
+  channel: () => ({
+    on: () => ({ subscribe: () => {} })
+  }),
+  storage: {
+    from: () => ({
+      upload: () => Promise.resolve({ data: null, error: { message: 'Demo mode: Storage not available' } }),
+      getPublicUrl: () => ({ data: { publicUrl: '' } })
+    })
   }
 })
+
+export const supabase = (supabaseUrl === 'https://placeholder.supabase.co' || supabaseAnonKey === 'placeholder_key') 
+  ? createMockClient() as any
+  : createClient<Database>(supabaseUrl, supabaseAnonKey, {
+      auth: {
+        autoRefreshToken: true,
+        persistSession: true,
+        detectSessionInUrl: true
+      },
+      realtime: {
+        params: {
+          eventsPerSecond: 10
+        }
+      }
+    })
 
 // Helper functions for common operations
 export const auth = {

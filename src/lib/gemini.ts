@@ -2,7 +2,7 @@ import { GoogleGenerativeAI } from '@google/generative-ai'
 import type { ChatMessage } from '@/lib/database.types'
 
 // Initialize Gemini AI
-const genAI = new GoogleGenerativeAI(import.meta.env.VITE_GEMINI_API_KEY || '')
+const genAI = new GoogleGenerativeAI(import.meta.env.VITE_GEMINI_API_KEY || 'demo_key')
 
 // Safety settings for emergency content
 const safetySettings = [
@@ -60,6 +60,11 @@ export class GeminiAIService {
     userProfile?: any
   ): Promise<string> {
     try {
+      // Check if we have a valid API key
+      if (!import.meta.env.VITE_GEMINI_API_KEY || import.meta.env.VITE_GEMINI_API_KEY === 'demo_key') {
+        return this.getDemoResponse(message, language)
+      }
+
       // Build context from previous messages
       const conversationHistory = context
         .slice(-10) // Last 10 messages for context
@@ -93,6 +98,15 @@ export class GeminiAIService {
     recommendations: string[]
   }> {
     try {
+      // Check if we have a valid API key
+      if (!import.meta.env.VITE_GEMINI_API_KEY || import.meta.env.VITE_GEMINI_API_KEY === 'demo_key') {
+        return {
+          isCredible: true,
+          confidence: 50,
+          analysis: "Demo mode: Incident report analysis is not available without a valid Gemini API key.",
+          recommendations: ["Configure Gemini API key for full analysis", "Manual review recommended"]
+        }
+      }
       const prompt = `
 As an AI disaster management expert, analyze this incident report for credibility:
 
@@ -160,6 +174,14 @@ Respond in JSON format:
     recommendations: string[]
   }> {
     try {
+      // Check if we have a valid API key
+      if (!import.meta.env.VITE_GEMINI_API_KEY || import.meta.env.VITE_GEMINI_API_KEY === 'demo_key') {
+        return {
+          riskLevel: 'low',
+          predictions: [],
+          recommendations: ["Demo mode: Disaster prediction requires a valid Gemini API key", "Monitor local weather services", "Stay informed through official channels"]
+        }
+      }
       const prompt = `
 As a disaster prediction AI, analyze the following data and provide predictions:
 
@@ -223,6 +245,14 @@ Provide predictions in JSON format:
     recommendations: string[]
   }> {
     try {
+      // Check if we have a valid API key
+      if (!import.meta.env.VITE_GEMINI_API_KEY || import.meta.env.VITE_GEMINI_API_KEY === 'demo_key') {
+        return {
+          allocations: [],
+          efficiency: 0,
+          recommendations: ["Demo mode: Resource optimization requires a valid Gemini API key", "Manual allocation recommended", "Review resource priorities"]
+        }
+      }
       const prompt = `
 Optimize resource allocation for disaster response:
 
@@ -309,6 +339,45 @@ Soyez utile, précis et priorisez la sécurité de l'utilisateur.`,
     }
     
     return prompts[language as keyof typeof prompts] || prompts.en
+  }
+
+  /**
+   * Demo response when no API key is provided
+   */
+  private getDemoResponse(message: string, language: string): string {
+    const responses = {
+      en: `I'm running in demo mode. You asked: "${message}". 
+
+In a real deployment, I would help you with:
+- Finding medical resources and emergency services
+- Reporting incidents and disasters
+- Understanding disaster preparedness
+- Providing safety information and guidance
+
+To enable full AI functionality, please configure your Gemini API key in the environment variables.`,
+      
+      es: `Estoy ejecutándose en modo demo. Preguntaste: "${message}".
+
+En un despliegue real, te ayudaría con:
+- Encontrar recursos médicos y servicios de emergencia
+- Reportar incidentes y desastres
+- Entender la preparación para desastres
+- Proporcionar información y orientación de seguridad
+
+Para habilitar la funcionalidad completa de IA, configura tu clave API de Gemini en las variables de entorno.`,
+      
+      fr: `Je fonctionne en mode démo. Vous avez demandé: "${message}".
+
+Dans un déploiement réel, je vous aiderais avec:
+- Trouver des ressources médicales et services d'urgence
+- Signaler des incidents et catastrophes
+- Comprendre la préparation aux catastrophes
+- Fournir des informations et conseils de sécurité
+
+Pour activer la fonctionnalité IA complète, configurez votre clé API Gemini dans les variables d'environnement.`
+    }
+    
+    return responses[language as keyof typeof responses] || responses.en
   }
 
   /**

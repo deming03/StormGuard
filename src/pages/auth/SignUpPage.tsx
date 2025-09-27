@@ -90,6 +90,11 @@ export default function SignUpPage() {
             <CardDescription className="text-gray-300">
               Create your account to access the disaster management platform
             </CardDescription>
+            <div className="bg-blue-500/20 border border-blue-400/30 rounded-lg p-3 mt-3">
+              <p className="text-blue-200 text-sm">
+                🎭 <strong>Demo Mode:</strong> This is a demonstration version. Your account will be created locally for testing purposes.
+              </p>
+            </div>
           </CardHeader>
           <CardContent>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">

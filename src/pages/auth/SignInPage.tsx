@@ -70,6 +70,11 @@ export default function SignInPage() {
             <CardDescription className="text-gray-300">
               Enter your email and password to access your dashboard
             </CardDescription>
+            <div className="bg-blue-500/20 border border-blue-400/30 rounded-lg p-3 mt-3">
+              <p className="text-blue-200 text-sm">
+                🎭 <strong>Demo Mode:</strong> Use any email and password to sign in for demonstration purposes.
+              </p>
+            </div>
           </CardHeader>
           <CardContent>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
