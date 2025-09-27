@@ -336,7 +336,7 @@ export const useNotificationStore = create<NotificationStore>()(
           schema: 'public',
           table: 'notifications',
           filter: `user_id=eq.${supabase.auth.getUser().then(({ data: { user } }) => user?.id)}`
-        }, (payload) => {
+        }, (payload: any) => {
           const { eventType, new: newRecord, old: oldRecord } = payload
           
           set(state => {
@@ -399,7 +399,7 @@ export const useNotificationStore = create<NotificationStore>()(
 )
 
 // Auto-subscribe to notifications when user is authenticated
-supabase.auth.onAuthStateChange((event, session) => {
+supabase.auth.onAuthStateChange((event: any, session: any) => {
   if (event === 'SIGNED_IN' && session) {
     useNotificationStore.getState().fetchNotifications()
     useNotificationStore.getState().subscribeToNotifications()

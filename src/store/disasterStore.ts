@@ -241,7 +241,7 @@ const generateDummyDisasters = (): DisasterWithLocation[] => {
         type: 'Point',
         coordinates: [101.6060, 3.1073] // Petaling Jaya
       },
-      affected_area: null,
+      affected_area: undefined,
       affected_radius: 500,
       estimated_affected_population: 2000,
       casualties_reported: 1,

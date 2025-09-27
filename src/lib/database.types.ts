@@ -23,6 +23,8 @@ export type DisasterSeverity = 'low' | 'medium' | 'high' | 'critical'
 export type DisasterStatus = 'active' | 'monitoring' | 'resolved' | 'archived'
 export type UserRole = 'citizen' | 'responder' | 'coordinator' | 'admin'
 export type IncidentStatus = 'pending' | 'verified' | 'false_report' | 'resolved'
+export type ResourceStatus = 'available' | 'deployed' | 'maintenance' | 'unavailable'
+export type ResourceType = 'medical' | 'shelter' | 'food' | 'water' | 'transport' | 'communication' | 'rescue' | 'other'
 
 export interface Database {
   public: {
@@ -502,6 +504,8 @@ export interface Polygon {
 export type DisasterWithLocation = Omit<Disaster, 'location' | 'affected_area'> & {
   location: Point
   affected_area?: Polygon
+  response_teams_assigned?: string[]
+  evacuation_status?: string
 }
 
 
@@ -519,11 +523,70 @@ export interface ChatMessage {
 // Notification preferences structure
 export interface NotificationPreferences {
   email: boolean
-  push: boolean
   sms: boolean
   disasters: boolean
   team_updates: boolean
   chat_responses: boolean
+  medical_resources: boolean
   severity_filter: DisasterSeverity[]
   location_radius: number // in meters
+}
+
+// Medical Resource types
+export interface MedicalResource {
+  id: string
+  name: string
+  type: ResourceType
+  description: string | null
+  status: ResourceStatus
+  capacity: number
+  current_usage: number
+  location: string // GeoJSON Point as string
+  contact_info: Json | null
+  specialties: string[] | null
+  available_24_7: boolean
+  created_at: string
+  updated_at: string
+}
+
+export type MedicalResourceWithLocation = Omit<MedicalResource, 'location'> & {
+  location: Point
+}
+
+// Safe Route types
+export interface SafeRoute {
+  id: string
+  type: 'safest' | 'fastest' | 'shortest'
+  routeType?: string
+  coordinates: [number, number][]
+  geometry?: [number, number][]
+  distance: number
+  duration: number
+  riskLevel: 'low' | 'medium' | 'high' | 'extreme'
+  maxRiskLevel: 'low' | 'medium' | 'high' | 'extreme'
+  safetyScore: number
+  riskAreasEncountered?: number
+  riskAreasAvoided?: number
+  warnings: Array<{
+    type: string
+    message: string
+    severity: 'low' | 'medium' | 'high' | 'extreme'
+  }>
+  waypoints: Array<{
+    location: [number, number]
+    description: string
+    riskLevel: 'low' | 'medium' | 'high' | 'extreme'
+  }>
+  hazards: Array<{
+    type: string
+    location: [number, number]
+    severity: 'low' | 'medium' | 'high' | 'extreme'
+    description: string
+  }>
+  instructions: Array<{
+    instruction: string
+    distance: number
+    duration: number
+    riskLevel: 'low' | 'medium' | 'high' | 'extreme'
+  }>
 }

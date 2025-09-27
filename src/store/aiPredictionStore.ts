@@ -15,7 +15,7 @@ interface PredictionActions {
   fetchPredictions: () => Promise<void>
   fetchActivePredictions: () => Promise<void>
   createDisasterPrediction: (location: [number, number], data?: any) => Promise<void>
-  createResourceOptimization: (disasters: any[], resources: any[]) => Promise<void>
+  createResourceOptimization: (disasters: any[], resources: any[]) => Promise<any>
   analyzeIncidentCredibility: (reportId: string, title: string, description: string) => Promise<any>
   validatePrediction: (id: string, outcome: any) => Promise<void>
   clearError: () => void

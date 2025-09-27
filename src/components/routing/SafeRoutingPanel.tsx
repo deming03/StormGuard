@@ -267,7 +267,7 @@ const SafeRoutingPanel: React.FC<SafeRoutingPanelProps> = ({
   // Handle suggestion selection
   const handleStartSuggestionSelect = (location: RoutePoint) => {
     setStartPoint(location);
-    setStartSearchQuery(location.name);
+    setStartSearchQuery(location.name || '');
     setShowStartSuggestions(false);
     if (onPointSelect) {
       onPointSelect('start', location);
@@ -276,7 +276,7 @@ const SafeRoutingPanel: React.FC<SafeRoutingPanelProps> = ({
 
   const handleEndSuggestionSelect = (location: RoutePoint) => {
     setEndPoint(location);
-    setEndSearchQuery(location.name);
+    setEndSearchQuery(location.name || '');
     setShowEndSuggestions(false);
     if (onPointSelect) {
       onPointSelect('end', location);
@@ -598,7 +598,7 @@ const SafeRoutingPanel: React.FC<SafeRoutingPanelProps> = ({
                     {selectedRoute.riskAreasAvoided > 0 && 
                       ` and successfully avoided ${selectedRoute.riskAreasAvoided} high-risk area(s).`
                     }
-                    {selectedRoute.maxRiskLevel === 'high' || selectedRoute.maxRiskLevel === 'extreme' ?
+                    {selectedRoute.riskLevel === 'high' || selectedRoute.riskLevel === 'extreme' ?
                       " ⚠️ Warning: This route still passes through risk areas - consider alternative transportation." :
                       " 🛡️ This route avoids all major risk areas."
                     }

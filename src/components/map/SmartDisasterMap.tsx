@@ -100,7 +100,7 @@ const SmartDisasterMap: React.FC<SmartDisasterMapProps> = ({
       map.current.on('error', (error) => {
         clearTimeout(loadingTimeout);
         console.error('TomTom map error:', error);
-        setMapError(`TomTom map error: ${error.message || 'Unknown error'}. Please check your API key.`);
+        setMapError(`TomTom map error: ${(error as any).message || 'Unknown error'}. Please check your API key.`);
       });
 
       // Handle source errors
@@ -308,7 +308,7 @@ const SmartDisasterMap: React.FC<SmartDisasterMapProps> = ({
     if (!map.current || !riskAssessment) return;
 
     const popup = new tt.Popup({ closeOnClick: true })
-      .setLngLat([location.lon, location.lat])
+      .setLngLat(new tt.LngLat(location.lon, location.lat))
       .setHTML(createPopupContent(location, riskAssessment))
       .addTo(map.current);
   };

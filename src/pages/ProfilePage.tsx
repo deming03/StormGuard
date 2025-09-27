@@ -62,7 +62,7 @@ export default function ProfilePage() {
   const [isLocationLoading, setIsLocationLoading] = useState(false)
   const [currentLocation, setCurrentLocation] = useState<[number, number] | null>(null)
   const [notificationPrefs, setNotificationPrefs] = useState<NotificationPreferences>(
-    (profile?.notification_preferences as NotificationPreferences) || defaultNotificationPreferences
+    (profile?.notification_preferences as any) || defaultNotificationPreferences
   )
 
   const form = useForm<ProfileForm>({
@@ -87,7 +87,7 @@ export default function ProfilePage() {
       })
       
       if (profile.notification_preferences) {
-        setNotificationPrefs(profile.notification_preferences as NotificationPreferences)
+        setNotificationPrefs(profile.notification_preferences as any)
       }
 
       // Parse location if available
@@ -153,7 +153,7 @@ export default function ProfilePage() {
   const updateNotificationPreferences = async () => {
     try {
       await updateProfile({
-        notification_preferences: notificationPrefs
+        notification_preferences: notificationPrefs as any
       })
       toast({
         title: "Preferences saved",
@@ -193,7 +193,7 @@ export default function ProfilePage() {
           <div className="flex items-center gap-2 mt-2">
             <Badge className={getRoleBadgeColor(profile?.role || 'citizen')} variant="outline">
               <User className="h-3 w-3 mr-1" />
-              {profile?.role?.charAt(0).toUpperCase() + profile?.role?.slice(1)}
+              {(profile?.role || 'citizen').charAt(0).toUpperCase() + (profile?.role || 'citizen').slice(1)}
             </Badge>
             {profile?.is_verified && (
               <Badge className="bg-green-100 text-green-800 border-green-200" variant="outline">

@@ -391,15 +391,6 @@ const MapboxSmartDisasterMap: React.FC<MapboxSmartDisasterMapProps> = ({
                 'line-join': 'round',
                 'line-cap': 'round',
               }}
-              onClick={(e: any) => {
-                if (onRouteClick && e.features && e.features.length > 0) {
-                  const routeId = e.features[0].properties.routeId;
-                  const route = routes.find(r => r.id === routeId);
-                  if (route) {
-                    onRouteClick(route);
-                  }
-                }
-              }}
             />
           </Source>
         )}

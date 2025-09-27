@@ -329,9 +329,11 @@ class GeocodingService {
     const searchQuery = query.toLowerCase().trim();
     
     return database.filter(location => 
-      location.name.toLowerCase().includes(searchQuery) ||
-      searchQuery.split(' ').some(word => 
-        location.name.toLowerCase().includes(word) && word.length > 2
+      location.name && (
+        location.name.toLowerCase().includes(searchQuery) ||
+        searchQuery.split(' ').some(word => 
+          location.name && location.name.toLowerCase().includes(word) && word.length > 2
+        )
       )
     ).slice(0, 5);
   }
