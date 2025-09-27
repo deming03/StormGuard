@@ -60,7 +60,8 @@ function App() {
               isAuthenticated ? (
                 <MainLayout>
                   <Routes>
-                    <Route index element={<DashboardPage />} />
+                    <Route index element={<SmartRoutingPage />} />
+                    <Route path="overview" element={<DashboardPage />} />
                     <Route path="disasters/*" element={<DisastersPage />} />
                     <Route path="medical-resources/*" element={<MedicalResourcesPage />} />
                     <Route path="smart-routing" element={<SmartRoutingPage />} />

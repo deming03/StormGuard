@@ -108,166 +108,162 @@ const SmartRoutingPage: React.FC = () => {
         </div>
       </div>
 
-      {/* Map and Routing Interface */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Map className="h-5 w-5" />
-            Interactive Risk Map & Route Planning
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          {/* Map Type Selector */}
-          <div className="flex gap-1 border rounded-lg p-1 w-fit">
-            <Button 
-              onClick={() => setMapType('mapbox')}
-              variant={mapType === 'mapbox' ? 'default' : 'ghost'}
-              size="sm"
-            >
-              Interactive Map
-            </Button>
-            <Button 
-              onClick={() => setMapType('fallback')}
-              variant={mapType === 'fallback' ? 'default' : 'ghost'}
-              size="sm"
-            >
-              List View
-            </Button>
-          </div>
+      {/* Main Layout: Route Planning (Left 40%) + Map (Right 60%) */}
+      <div className="grid grid-cols-1 xl:grid-cols-5 gap-6 h-[calc(100vh-200px)] min-h-[600px]">
+        {/* Left Panel: Safe Route Planning (40%) */}
+        <Card className="flex flex-col xl:col-span-2">
+          <CardHeader className="flex-shrink-0">
+            <CardTitle className="flex items-center gap-2">
+              <Route className="h-5 w-5" />
+              Safe Route Planning
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="flex-1 overflow-y-auto" style={{ maxHeight: 'calc(100vh - 280px)' }}>
+            <div className="space-y-6">
+              {/* Routing Panel */}
+              <div>
+                <SafeRoutingPanel
+                  onPointSelect={handleRoutingPointSelect}
+                  className="h-full"
+                />
+              </div>
 
-          <p className="text-sm text-gray-600">
-            {mapType === 'mapbox' ? 
-              'Interactive map showing real-time risk areas. Click on the map to set routing points.' :
-              'List view of all locations with risk details. Click location cards to set route points.'
-            }
-          </p>
+              {/* Instructions & Info */}
+              <div className="space-y-4">
+                <div className="bg-blue-50 border border-blue-200 p-4 rounded-lg">
+                  <h5 className="font-semibold text-blue-800 mb-2 flex items-center gap-2">
+                    <Navigation className="h-4 w-4" />
+                    How to Use Smart Routing
+                  </h5>
+                  <div className="text-sm text-blue-700 space-y-2">
+                    <ol className="list-decimal list-inside space-y-1">
+                      <li>🗺️ Click on the map or use the search to set your start location</li>
+                      <li>📍 Set your destination using the same method</li>
+                      <li>⚙️ Choose your vehicle type (driving, walking, cycling)</li>
+                      <li>🛡️ Enable "Avoid high-risk areas" for maximum safety</li>
+                      <li>🚗 Click "Calculate Safe Routes" to get AI-powered recommendations</li>
+                      <li>📊 Review routes with safety scores and select the best option</li>
+                    </ol>
+                    <div className="mt-3 p-2 bg-yellow-50 border border-yellow-200 rounded">
+                      <strong>💡 Tip:</strong> The system automatically selects the safest route when risk avoidance is enabled!
+                    </div>
+                  </div>
+                </div>
 
-          {/* Map Component */}
-          <div className="border rounded-lg overflow-hidden">
-            {mapType === 'fallback' ? (
-              <FallbackRiskMap
-                locations={allMapLocations}
-                onLocationSelect={handleMapClickForRouting}
-                className="h-96"
-                showLegend={true}
-              />
-            ) : (
-              <MapboxSmartDisasterMap
-                locations={allMapLocations}
-                onLocationSelect={handleMapClickForRouting}
-                className="h-96"
-                showLegend={true}
-                routes={routes}
-                selectedRoute={selectedRoute}
-                startPoint={startPoint}
-                endPoint={endPoint}
-              />
-            )}
-          </div>
-        </CardContent>
-      </Card>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
+                  <div className="bg-green-50 border border-green-200 p-3 rounded-lg">
+                    <h6 className="font-semibold text-green-800 mb-1">🛡️ Safety Features</h6>
+                    <ul className="text-green-700 text-xs space-y-1">
+                      <li>• Real-time weather monitoring</li>
+                      <li>• AI disaster risk assessment</li>
+                      <li>• Automatic high-risk area avoidance</li>
+                      <li>• Safety scoring (0-100)</li>
+                      <li>• Multiple route alternatives</li>
+                    </ul>
+                  </div>
 
-      {/* Safe Routing Panel */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Route className="h-5 w-5" />
-            Safe Route Planning
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            {/* Routing Panel */}
-            <div>
-              <SafeRoutingPanel
-                onPointSelect={handleRoutingPointSelect}
-                className="h-full"
-              />
+                  <div className="bg-orange-50 border border-orange-200 p-3 rounded-lg">
+                    <h6 className="font-semibold text-orange-800 mb-1">⚡ Smart Features</h6>
+                    <ul className="text-orange-700 text-xs space-y-1">
+                      <li>• Intelligent route selection</li>
+                      <li>• Risk-aware pathfinding</li>
+                      <li>• Emergency recommendations</li>
+                      <li>• Real-time risk updates</li>
+                      <li>• Multi-modal transport support</li>
+                    </ul>
+                  </div>
+                </div>
+
+                {routes.length > 0 && (
+                  <div className="bg-gray-50 p-4 rounded-lg">
+                    <h6 className="font-semibold mb-2">📊 Current Route Analysis</h6>
+                    <div className="grid grid-cols-2 gap-4 text-sm">
+                      <div>
+                        <strong>Routes Available:</strong> {routes.length}
+                      </div>
+                      <div>
+                        <strong>Active Route:</strong> {selectedRoute ? selectedRoute.routeType : 'None'}
+                      </div>
+                      {selectedRoute && (
+                        <>
+                          <div>
+                            <strong>Safety Score:</strong> 
+                            <Badge className={`ml-2 ${selectedRoute.safetyScore >= 80 ? 'bg-green-100 text-green-800' : 
+                                                   selectedRoute.safetyScore >= 60 ? 'bg-yellow-100 text-yellow-800' : 
+                                                   'bg-red-100 text-red-800'}`}>
+                              {selectedRoute.safetyScore}/100
+                            </Badge>
+                          </div>
+                          <div>
+                            <strong>Risk Level:</strong>
+                            <Badge className={`ml-2 ${selectedRoute.riskLevel === 'low' ? 'bg-green-100 text-green-800' : 
+                                                    selectedRoute.riskLevel === 'medium' ? 'bg-yellow-100 text-yellow-800' :
+                                                    'bg-red-100 text-red-800'}`}>
+                              {selectedRoute.riskLevel.toUpperCase()}
+                            </Badge>
+                          </div>
+                        </>
+                      )}
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Right Panel: Interactive Map (60%) */}
+        <Card className="flex flex-col xl:col-span-3">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Map className="h-5 w-5" />
+              Interactive Risk Map
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="flex-1 flex flex-col space-y-4">
+            {/* Map Type Selector */}
+            <div className="flex gap-1 border rounded-lg p-1 w-fit">
+              <Button 
+                onClick={() => setMapType('mapbox')}
+                variant={mapType === 'mapbox' ? 'default' : 'ghost'}
+                size="sm"
+              >
+                Interactive Map
+              </Button>
+              <Button 
+                onClick={() => setMapType('fallback')}
+                variant={mapType === 'fallback' ? 'default' : 'ghost'}
+                size="sm"
+              >
+                List View
+              </Button>
             </div>
 
-            {/* Instructions & Info */}
-            <div className="space-y-4">
-              <div className="bg-blue-50 border border-blue-200 p-4 rounded-lg">
-                <h5 className="font-semibold text-blue-800 mb-2 flex items-center gap-2">
-                  <Navigation className="h-4 w-4" />
-                  How to Use Smart Routing
-                </h5>
-                <div className="text-sm text-blue-700 space-y-2">
-                  <ol className="list-decimal list-inside space-y-1">
-                    <li>🗺️ Click on the map or use the search to set your start location</li>
-                    <li>📍 Set your destination using the same method</li>
-                    <li>⚙️ Choose your vehicle type (driving, walking, cycling)</li>
-                    <li>🛡️ Enable "Avoid high-risk areas" for maximum safety</li>
-                    <li>🚗 Click "Calculate Safe Routes" to get AI-powered recommendations</li>
-                    <li>📊 Review routes with safety scores and select the best option</li>
-                  </ol>
-                  <div className="mt-3 p-2 bg-yellow-50 border border-yellow-200 rounded">
-                    <strong>💡 Tip:</strong> The system automatically selects the safest route when risk avoidance is enabled!
-                  </div>
-                </div>
-              </div>
-
-              <div className="grid grid-cols-2 gap-4 text-sm">
-                <div className="bg-green-50 border border-green-200 p-3 rounded-lg">
-                  <h6 className="font-semibold text-green-800 mb-1">🛡️ Safety Features</h6>
-                  <ul className="text-green-700 text-xs space-y-1">
-                    <li>• Real-time weather monitoring</li>
-                    <li>• AI disaster risk assessment</li>
-                    <li>• Automatic high-risk area avoidance</li>
-                    <li>• Safety scoring (0-100)</li>
-                    <li>• Multiple route alternatives</li>
-                  </ul>
-                </div>
-
-                <div className="bg-orange-50 border border-orange-200 p-3 rounded-lg">
-                  <h6 className="font-semibold text-orange-800 mb-1">⚡ Smart Features</h6>
-                  <ul className="text-orange-700 text-xs space-y-1">
-                    <li>• Intelligent route selection</li>
-                    <li>• Risk-aware pathfinding</li>
-                    <li>• Emergency recommendations</li>
-                    <li>• Real-time risk updates</li>
-                    <li>• Multi-modal transport support</li>
-                  </ul>
-                </div>
-              </div>
-
-              {routes.length > 0 && (
-                <div className="bg-gray-50 p-4 rounded-lg">
-                  <h6 className="font-semibold mb-2">📊 Current Route Analysis</h6>
-                  <div className="grid grid-cols-2 gap-4 text-sm">
-                    <div>
-                      <strong>Routes Available:</strong> {routes.length}
-                    </div>
-                    <div>
-                      <strong>Active Route:</strong> {selectedRoute ? selectedRoute.routeType : 'None'}
-                    </div>
-                    {selectedRoute && (
-                      <>
-                        <div>
-                          <strong>Safety Score:</strong> 
-                          <Badge className={`ml-2 ${selectedRoute.safetyScore >= 80 ? 'bg-green-100 text-green-800' : 
-                                                 selectedRoute.safetyScore >= 60 ? 'bg-yellow-100 text-yellow-800' : 
-                                                 'bg-red-100 text-red-800'}`}>
-                            {selectedRoute.safetyScore}/100
-                          </Badge>
-                        </div>
-                        <div>
-                          <strong>Risk Level:</strong>
-                          <Badge className={`ml-2 ${selectedRoute.riskLevel === 'low' ? 'bg-green-100 text-green-800' : 
-                                                  selectedRoute.riskLevel === 'medium' ? 'bg-yellow-100 text-yellow-800' :
-                                                  'bg-red-100 text-red-800'}`}>
-                            {selectedRoute.riskLevel.toUpperCase()}
-                          </Badge>
-                        </div>
-                      </>
-                    )}
-                  </div>
-                </div>
+            {/* Map Component */}
+            <div className="flex-1 border rounded-lg overflow-hidden">
+              {mapType === 'fallback' ? (
+                <FallbackRiskMap
+                  locations={allMapLocations}
+                  onLocationSelect={handleMapClickForRouting}
+                  className="h-full min-h-[400px]"
+                  showLegend={true}
+                />
+              ) : (
+                <MapboxSmartDisasterMap
+                  locations={allMapLocations}
+                  onLocationSelect={handleMapClickForRouting}
+                  className="h-full min-h-[400px]"
+                  showLegend={true}
+                  routes={routes}
+                  selectedRoute={selectedRoute}
+                  startPoint={startPoint}
+                  endPoint={endPoint}
+                />
               )}
             </div>
-          </div>
-        </CardContent>
-      </Card>
+          </CardContent>
+        </Card>
+      </div>
     </div>
   );
 };

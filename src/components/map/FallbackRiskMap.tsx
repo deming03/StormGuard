@@ -271,7 +271,7 @@ const FallbackRiskMap: React.FC<FallbackRiskMapProps> = ({
 
       {/* Legend */}
       {showLegend && (
-        <div className="absolute top-16 left-4 bg-white/90 backdrop-blur-sm p-3 rounded-lg shadow-lg">
+        <div className="absolute top-16 right-4 bg-white/95 backdrop-blur-sm p-3 rounded-lg shadow-lg border z-20 max-w-xs">
           <h4 className="font-semibold mb-2 text-sm flex items-center gap-2">
             <Brain className="h-4 w-4" />
             AI Risk Areas
@@ -295,7 +295,7 @@ const FallbackRiskMap: React.FC<FallbackRiskMapProps> = ({
             </div>
           </div>
           <div className="mt-2 pt-2 border-t border-gray-200 text-xs text-gray-600">
-            Shows affected areas and radius coverage
+            Areas show affected radius based on AI assessment
           </div>
         </div>
       )}

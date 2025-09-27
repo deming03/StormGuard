@@ -7,7 +7,6 @@ import NotificationPanel from '@/components/NotificationPanel'
 import { 
   Home, 
   AlertTriangle, 
-  Heart, 
   FileText, 
   MessageCircle, 
   User, 
@@ -27,15 +26,15 @@ interface MainLayoutProps {
 }
 
 const navigation = [
-  { name: 'Dashboard', href: '/dashboard', icon: Home },
-  { name: 'Disasters', href: '/dashboard/disasters', icon: AlertTriangle },
-  { name: 'Medical Resources', href: '/dashboard/medical-resources', icon: Heart },
-  { name: 'Smart Routing', href: '/dashboard/smart-routing', icon: Route },
+  { name: 'Smart Routing', href: '/dashboard', icon: Route },
+  { name: 'Overview', href: '/dashboard/overview', icon: Home },
+  { name: 'Flood Management', href: '/dashboard/disasters', icon: AlertTriangle },
   { name: 'AI Chatbot', href: '/dashboard/chatbot', icon: MessageCircle },
 ]
 
 const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
   const [sidebarOpen, setSidebarOpen] = useState(false)
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false)
   const [notificationPanelOpen, setNotificationPanelOpen] = useState(false)
   const location = useLocation()
   const { profile, signOut } = useAuthStore()
@@ -64,10 +63,11 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
       )}
 
       {/* Sidebar */}
-      <div className={cn(
-        "fixed inset-y-0 left-0 z-30 w-64 bg-white shadow-lg transform transition-transform duration-200 ease-in-out lg:relative lg:translate-x-0",
-        sidebarOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
-      )}>
+      {!sidebarCollapsed && (
+        <div className={cn(
+          "fixed inset-y-0 left-0 z-30 w-64 bg-white shadow-lg transform transition-transform duration-200 ease-in-out lg:relative lg:translate-x-0",
+          sidebarOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
+        )}>
         <div className="flex flex-col h-full">
           {/* Logo/Brand */}
           <div className="flex items-center justify-between h-16 px-6 border-b border-gray-200">
@@ -154,9 +154,13 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
           </div>
         </div>
       </div>
+      )}
 
       {/* Main content */}
-      <div className="flex-1 flex flex-col min-w-0">
+      <div className={cn(
+        "flex-1 flex flex-col min-w-0 transition-all duration-200",
+        sidebarCollapsed ? "ml-0" : ""
+      )}>
         {/* Top header */}
         <header className="bg-white shadow-sm border-b border-gray-200 flex-shrink-0">
           <div className="flex items-center justify-between h-16 px-4 sm:px-6 lg:px-8">
@@ -164,11 +168,29 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
               <Button
                 variant="ghost"
                 size="icon"
-                className="lg:hidden"
-                onClick={() => setSidebarOpen(true)}
+                className={sidebarCollapsed ? "" : "lg:hidden"}
+                onClick={() => {
+                  if (sidebarCollapsed) {
+                    setSidebarCollapsed(false)
+                  } else {
+                    setSidebarOpen(true)
+                  }
+                }}
               >
                 <Menu className="w-5 h-5" />
               </Button>
+              
+              {!sidebarCollapsed && (
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="hidden lg:flex"
+                  onClick={() => setSidebarCollapsed(true)}
+                  title="Collapse sidebar"
+                >
+                  <X className="w-5 h-5" />
+                </Button>
+              )}
 
               {/* Search bar */}
               <div className="hidden md:block">
@@ -176,7 +198,7 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
                   <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
                   <input
                     type="text"
-                    placeholder="Search disasters, resources..."
+                    placeholder="Search flood incidents..."
                     className="pl-10 pr-4 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent w-64"
                   />
                 </div>

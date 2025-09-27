@@ -35,7 +35,7 @@ const CreateIncidentReportForm: React.FC<CreateIncidentReportFormProps> = ({
   const [formData, setFormData] = useState({
     title: '',
     description: '',
-    incident_type: '' as DisasterType | '',
+    incident_type: 'flood' as DisasterType,
     severity: '' as DisasterSeverity | '',
     location_description: '',
     reporter_contact: '',
@@ -48,13 +48,11 @@ const CreateIncidentReportForm: React.FC<CreateIncidentReportFormProps> = ({
   const [selectedFiles, setSelectedFiles] = useState<File[]>([])
   const [loading, setLoading] = useState(false)
 
-  const disasterTypes: { value: DisasterType; label: string }[] = [
-    { value: 'flood', label: '🌊 Flood' },
-    { value: 'earthquake', label: '🏔️ Earthquake' },
-    { value: 'fire', label: '🔥 Fire' },
-    { value: 'storm', label: '⛈️ Storm' },
-    { value: 'landslide', label: '🏔️ Landslide' },
-    { value: 'other', label: '⚠️ Other Emergency' }
+  const floodTypes: { value: DisasterType; label: string }[] = [
+    { value: 'flood', label: '🌊 Flash Flood' },
+    { value: 'flood', label: '🌊 River Flood' },
+    { value: 'flood', label: '🌊 Urban Flood' },
+    { value: 'flood', label: '🌊 Coastal Flood' }
   ]
 
   const severityLevels: { value: DisasterSeverity; label: string; color: string }[] = [
@@ -149,7 +147,7 @@ const CreateIncidentReportForm: React.FC<CreateIncidentReportFormProps> = ({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     
-    if (!formData.title.trim() || !formData.description.trim() || !formData.incident_type || !formData.severity) {
+    if (!formData.title.trim() || !formData.description.trim() || !formData.severity) {
       toast({
         title: "Missing required fields",
         description: "Please fill in all required fields.",
@@ -206,15 +204,15 @@ const CreateIncidentReportForm: React.FC<CreateIncidentReportFormProps> = ({
       console.log('Created incident report:', finalReportData)
 
       toast({
-        title: "Report submitted successfully!",
-        description: "Your incident report has been submitted and will be reviewed by authorities.",
+        title: "Flood report submitted successfully!",
+        description: "Your flood report has been submitted and will be reviewed by flood management authorities.",
       })
 
       // Reset form
       setFormData({
         title: '',
         description: '',
-        incident_type: '' as DisasterType | '',
+        incident_type: 'flood' as DisasterType,
         severity: '' as DisasterSeverity | '',
         location_description: '',
         reporter_contact: '',
@@ -259,17 +257,17 @@ const CreateIncidentReportForm: React.FC<CreateIncidentReportFormProps> = ({
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <AlertTriangle className="h-5 w-5 text-orange-500" />
-            Report Incident
+Report Flood Incident
           </CardTitle>
           <CardDescription>
-            Report an emergency or disaster incident to help authorities respond quickly
+Report a flood incident to help authorities respond quickly
           </CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-6">
             {/* Title */}
             <div className="space-y-2">
-              <Label htmlFor="title">Incident Title *</Label>
+              <Label htmlFor="title">Flood Incident Title *</Label>
               <Input
                 id="title"
                 placeholder="e.g., Flash flood on Main Street"
@@ -279,24 +277,19 @@ const CreateIncidentReportForm: React.FC<CreateIncidentReportFormProps> = ({
               />
             </div>
 
-            {/* Type and Severity */}
+            {/* Severity */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="incident_type">Incident Type *</Label>
+                <Label htmlFor="incident_type">Flood Type</Label>
                 <Select 
-                  value={formData.incident_type} 
-                  onValueChange={(value) => handleInputChange('incident_type', value)}
-                  required
+                  value="flood" 
+                  disabled
                 >
                   <SelectTrigger>
-                    <SelectValue placeholder="Select incident type" />
+                    <SelectValue placeholder="🌊 Flood" />
                   </SelectTrigger>
                   <SelectContent>
-                    {disasterTypes.map((type) => (
-                      <SelectItem key={type.value} value={type.value}>
-                        {type.label}
-                      </SelectItem>
-                    ))}
+                    <SelectItem value="flood">🌊 Flood</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -327,7 +320,7 @@ const CreateIncidentReportForm: React.FC<CreateIncidentReportFormProps> = ({
               <Label htmlFor="description">Description *</Label>
               <Textarea
                 id="description"
-                placeholder="Describe what happened, when it occurred, and current situation..."
+                placeholder="Describe the flood situation, water levels, affected areas, and current conditions..."
                 value={formData.description}
                 onChange={(e) => handleInputChange('description', e.target.value)}
                 rows={4}
@@ -404,7 +397,7 @@ const CreateIncidentReportForm: React.FC<CreateIncidentReportFormProps> = ({
               <Label htmlFor="damage_description">Damage Assessment</Label>
               <Textarea
                 id="damage_description"
-                placeholder="Describe any damage to property, infrastructure, or environment..."
+                placeholder="Describe flood damage to property, roads, infrastructure, or environment..."
                 value={formData.damage_description}
                 onChange={(e) => handleInputChange('damage_description', e.target.value)}
                 rows={3}
@@ -462,7 +455,7 @@ const CreateIncidentReportForm: React.FC<CreateIncidentReportFormProps> = ({
             {/* Demo Mode Notice */}
             <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
               <p className="text-blue-700 text-sm">
-                🎭 <strong>Demo Mode:</strong> This is a demonstration version. Your report will be created locally for testing purposes. In a real deployment, this would be sent to emergency services.
+                🎭 <strong>Demo Mode:</strong> This is a demonstration version. Your flood report will be created locally for testing purposes. In a real deployment, this would be sent to flood management authorities.
               </p>
             </div>
 

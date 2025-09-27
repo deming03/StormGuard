@@ -31,7 +31,6 @@ function DisastersListView() {
   const { disasters, loading, fetchDisasters } = useDisasterStore()
   const [searchTerm, setSearchTerm] = useState('')
   const [severityFilter, setSeverityFilter] = useState<DisasterSeverity | 'all'>('all')
-  const [typeFilter, setTypeFilter] = useState<DisasterType | 'all'>('all')
   const [statusFilter, setStatusFilter] = useState<DisasterStatus | 'all'>('active')
 
   useEffect(() => {
@@ -39,13 +38,14 @@ function DisastersListView() {
   }, [])
 
   const filteredDisasters = disasters.filter(disaster => {
+    // Only show flood disasters
+    const isFlood = disaster.disaster_type === 'flood'
     const matchesSearch = disaster.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          disaster.description?.toLowerCase().includes(searchTerm.toLowerCase())
     const matchesSeverity = severityFilter === 'all' || disaster.severity === severityFilter
-    const matchesType = typeFilter === 'all' || disaster.disaster_type === typeFilter
     const matchesStatus = statusFilter === 'all' || disaster.status === statusFilter
     
-    return matchesSearch && matchesSeverity && matchesType && matchesStatus
+    return isFlood && matchesSearch && matchesSeverity && matchesStatus
   })
 
   return (
@@ -53,15 +53,15 @@ function DisastersListView() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h1 className="text-3xl font-bold">Disaster Management</h1>
-          <p className="text-muted-foreground">Monitor and manage active disasters</p>
+          <h1 className="text-3xl font-bold">Flood Management</h1>
+          <p className="text-muted-foreground">Monitor and manage flood incidents</p>
         </div>
         <Button onClick={() => {
           console.log('Report Disaster button clicked')
           navigate('create')
         }} className="flex items-center gap-2">
           <Plus className="h-4 w-4" />
-          Report Disaster
+Report Flood
         </Button>
       </div>
 
@@ -69,11 +69,11 @@ function DisastersListView() {
       <div className="grid gap-4 md:grid-cols-4">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Disasters</CardTitle>
+            <CardTitle className="text-sm font-medium">Total Floods</CardTitle>
             <AlertTriangle className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{disasters.length}</div>
+            <div className="text-2xl font-bold">{disasters.filter(d => d.disaster_type === 'flood').length}</div>
           </CardContent>
         </Card>
 
@@ -84,7 +84,7 @@ function DisastersListView() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
-              {disasters.filter(d => d.status === 'active').length}
+              {disasters.filter(d => d.status === 'active' && d.disaster_type === 'flood').length}
             </div>
           </CardContent>
         </Card>
@@ -96,7 +96,7 @@ function DisastersListView() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
-              {disasters.filter(d => d.severity === 'critical').length}
+              {disasters.filter(d => d.severity === 'critical' && d.disaster_type === 'flood').length}
             </div>
           </CardContent>
         </Card>
@@ -108,7 +108,7 @@ function DisastersListView() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
-              {disasters.reduce((sum, d) => sum + (d.estimated_affected_population || 0), 0).toLocaleString()}
+              {disasters.filter(d => d.disaster_type === 'flood').reduce((sum, d) => sum + (d.estimated_affected_population || 0), 0).toLocaleString()}
             </div>
           </CardContent>
         </Card>
@@ -128,7 +128,7 @@ function DisastersListView() {
               <div className="relative">
                 <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
                 <Input
-                  placeholder="Search disasters..."
+                  placeholder="Search flood incidents..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   className="pl-8"
@@ -162,23 +162,12 @@ function DisastersListView() {
               </SelectContent>
             </Select>
 
-            <Select value={typeFilter} onValueChange={(value: DisasterType | 'all') => setTypeFilter(value)}>
+            <Select value="flood" disabled>
               <SelectTrigger className="w-[140px]">
-                <SelectValue placeholder="Type" />
+                <SelectValue placeholder="Flood Only" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">All Types</SelectItem>
-                <SelectItem value="earthquake">Earthquake</SelectItem>
-                <SelectItem value="flood">Flood</SelectItem>
-                <SelectItem value="hurricane">Hurricane</SelectItem>
-                <SelectItem value="wildfire">Wildfire</SelectItem>
-                <SelectItem value="tornado">Tornado</SelectItem>
-                <SelectItem value="tsunami">Tsunami</SelectItem>
-                <SelectItem value="volcano">Volcano</SelectItem>
-                <SelectItem value="drought">Drought</SelectItem>
-                <SelectItem value="landslide">Landslide</SelectItem>
-                <SelectItem value="blizzard">Blizzard</SelectItem>
-                <SelectItem value="other">Other</SelectItem>
+                <SelectItem value="flood">🌊 Flood</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -208,11 +197,11 @@ function DisastersListView() {
           <Card>
             <CardContent className="p-12 text-center">
               <AlertTriangle className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-              <h3 className="text-lg font-semibold mb-2">No disasters found</h3>
+              <h3 className="text-lg font-semibold mb-2">No flood incidents found</h3>
               <p className="text-muted-foreground">
-                {searchTerm || severityFilter !== 'all' || typeFilter !== 'all' || statusFilter !== 'all'
+                {searchTerm || severityFilter !== 'all' || statusFilter !== 'all'
                   ? 'Try adjusting your filters to see more results.'
-                  : 'No disasters have been reported yet.'}
+                  : 'No flood incidents have been reported yet.'}
               </p>
             </CardContent>
           </Card>
@@ -293,8 +282,8 @@ function DisastersMapView() {
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h1 className="text-3xl font-bold">Disaster Map</h1>
-          <p className="text-muted-foreground">Real-time disaster visualization</p>
+          <h1 className="text-3xl font-bold">Flood Map</h1>
+          <p className="text-muted-foreground">Real-time flood visualization</p>
         </div>
       </div>
 
