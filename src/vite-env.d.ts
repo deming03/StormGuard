@@ -6,6 +6,7 @@ interface ImportMetaEnv {
   readonly VITE_MAPBOX_TOKEN: string
   readonly VITE_GEMINI_API_KEY: string
   readonly VITE_OPENWEATHER_API_KEY?: string
+  readonly VITE_TOMTOM_API_KEY?: string
   readonly VITE_NASA_API_KEY?: string
 }
 

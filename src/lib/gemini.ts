@@ -1,5 +1,29 @@
 import { GoogleGenerativeAI } from '@google/generative-ai'
 import type { ChatMessage } from '@/lib/database.types'
+import type { WeatherData } from './openWeatherService'
+
+export interface DisasterRiskAssessment {
+  location: {
+    lat: number;
+    lon: number;
+    name: string;
+  };
+  overallRiskLevel: 'low' | 'medium' | 'high' | 'extreme';
+  riskFactors: {
+    flooding: 'low' | 'medium' | 'high' | 'extreme';
+    windDamage: 'low' | 'medium' | 'high' | 'extreme';
+    heatWave: 'low' | 'medium' | 'high' | 'extreme';
+    coldWave: 'low' | 'medium' | 'high' | 'extreme';
+  };
+  confidence: number; // 0-1
+  reasoning: string;
+  recommendations: string[];
+  estimatedDuration: {
+    start: string;
+    end: string;
+  };
+  affectedRadius: number; // in kilometers
+}
 
 // Initialize Gemini AI
 const genAI = new GoogleGenerativeAI(import.meta.env.VITE_GEMINI_API_KEY || 'demo_key')
@@ -304,6 +328,143 @@ Provide optimal allocation in JSON format:
   }
 
   /**
+   * Assess disaster risk based on weather data using Gemini AI
+   */
+  async assessDisasterRisk(weatherData: WeatherData): Promise<DisasterRiskAssessment> {
+    try {
+      // Check if we have a valid API key
+      if (!import.meta.env.VITE_GEMINI_API_KEY || import.meta.env.VITE_GEMINI_API_KEY === 'demo_key') {
+        return {
+          location: weatherData.location,
+          overallRiskLevel: 'low',
+          riskFactors: {
+            flooding: 'low',
+            windDamage: 'low',
+            heatWave: 'low',
+            coldWave: 'low',
+          },
+          confidence: 0.5,
+          reasoning: "Demo mode: Disaster risk assessment requires a valid Gemini API key for accurate analysis.",
+          recommendations: ["Configure Gemini API key for full risk assessment", "Monitor local weather services", "Stay informed through official channels"],
+          estimatedDuration: {
+            start: new Date().toISOString(),
+            end: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(),
+          },
+          affectedRadius: 5.0,
+        };
+      }
+
+      const prompt = `
+You are an expert meteorologist and disaster risk analyst. Analyze the following weather data and provide a comprehensive disaster risk assessment.
+
+Weather Data:
+Location: ${weatherData.location.name} (${weatherData.location.lat}, ${weatherData.location.lon})
+
+Current Conditions:
+- Temperature: ${weatherData.current.temperature}°C
+- Wind Speed: ${weatherData.current.windSpeed} m/s
+- Humidity: ${weatherData.current.humidity}%
+- Pressure: ${weatherData.current.pressure} hPa
+- Visibility: ${weatherData.current.visibility} km
+- Weather: ${weatherData.current.weatherDescription}
+
+5-Day Forecast:
+${weatherData.forecast.map(day => 
+  `- ${day.datetime}: ${day.temperature}°C, Rainfall: ${day.rainfall}mm, Wind: ${day.windSpeed}m/s, ${day.weatherDescription}`
+).join('\n')}
+
+Weather Alerts:
+${weatherData.alerts.length > 0 ? 
+  weatherData.alerts.map(alert => `- ${alert.event}: ${alert.description} (${alert.severity})`).join('\n') :
+  'No active weather alerts'
+}
+
+Based on this data, provide a risk assessment in the following JSON format:
+{
+  "overallRiskLevel": "low|medium|high|extreme",
+  "riskFactors": {
+    "flooding": "low|medium|high|extreme",
+    "windDamage": "low|medium|high|extreme", 
+    "heatWave": "low|medium|high|extreme",
+    "coldWave": "low|medium|high|extreme"
+  },
+  "confidence": 0.85,
+  "reasoning": "Detailed explanation of the risk assessment",
+  "recommendations": ["Recommendation 1", "Recommendation 2"],
+  "estimatedDuration": {
+    "start": "2024-01-01T00:00:00Z",
+    "end": "2024-01-02T00:00:00Z"
+  },
+  "affectedRadius": 15.5
+}
+
+Consider these factors:
+1. Rainfall accumulation and intensity for flooding risk
+2. Wind speed and gusts for wind damage risk  
+3. Temperature extremes for heat/cold wave risk
+4. Weather alert severity levels
+5. Local topography and drainage (assume average conditions)
+6. Population density impact (assume medium density)
+
+Provide only the JSON response, no additional text.
+`;
+
+      const result = await this.model.generateContent(prompt);
+      const response = await result.response;
+      const text = response.text();
+      
+      try {
+        const assessment = JSON.parse(text) as Omit<DisasterRiskAssessment, 'location'>;
+        
+        return {
+          ...assessment,
+          location: weatherData.location,
+        };
+      } catch (parseError) {
+        console.warn('Failed to parse AI response, using fallback:', parseError);
+        return {
+          location: weatherData.location,
+          overallRiskLevel: 'medium',
+          riskFactors: {
+            flooding: 'medium',
+            windDamage: 'medium',
+            heatWave: 'low',
+            coldWave: 'low',
+          },
+          confidence: 0.6,
+          reasoning: "AI response could not be parsed properly. Weather data indicates potential risks based on current conditions.",
+          recommendations: ["Monitor weather conditions closely", "Stay informed through official channels", "Prepare emergency supplies"],
+          estimatedDuration: {
+            start: new Date().toISOString(),
+            end: new Date(Date.now() + 48 * 60 * 60 * 1000).toISOString(),
+          },
+          affectedRadius: 10.0,
+        };
+      }
+    } catch (error) {
+      console.error('Error assessing disaster risk:', error);
+      return {
+        location: weatherData.location,
+        overallRiskLevel: 'low',
+        riskFactors: {
+          flooding: 'low',
+          windDamage: 'low',
+          heatWave: 'low',
+          coldWave: 'low',
+        },
+        confidence: 0.3,
+        reasoning: "Risk assessment service is temporarily unavailable. Please monitor local weather services for current conditions.",
+        recommendations: ["Check local weather services", "Monitor emergency alerts", "Stay prepared for changing conditions"],
+        estimatedDuration: {
+          start: new Date().toISOString(),
+          end: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(),
+        },
+        affectedRadius: 5.0,
+      };
+    }
+  }
+
+  /**
    * Generate multilingual system prompt
    */
   private getSystemPrompt(language: string, userProfile?: any): string {
@@ -416,6 +577,11 @@ Pour activer la fonctionnalité IA complète, configurez votre clé API Gemini d
 
 // Export singleton instance
 export const geminiAI = new GeminiAIService()
+
+// Standalone function for disaster risk assessment
+export async function assessDisasterRisk(weatherData: WeatherData): Promise<DisasterRiskAssessment> {
+  return geminiAI.assessDisasterRisk(weatherData);
+}
 
 // Helper functions
 export const aiUtils = {

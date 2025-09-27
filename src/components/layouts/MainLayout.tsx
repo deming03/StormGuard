@@ -17,7 +17,8 @@ import {
   X,
   Bell,
   Search,
-  Globe
+  Globe,
+  Route
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
@@ -29,6 +30,7 @@ const navigation = [
   { name: 'Dashboard', href: '/dashboard', icon: Home },
   { name: 'Disasters', href: '/dashboard/disasters', icon: AlertTriangle },
   { name: 'Medical Resources', href: '/dashboard/medical-resources', icon: Heart },
+  { name: 'Smart Routing', href: '/dashboard/smart-routing', icon: Route },
   { name: 'AI Chatbot', href: '/dashboard/chatbot', icon: MessageCircle },
 ]
 

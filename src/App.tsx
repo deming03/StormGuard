@@ -9,6 +9,7 @@ import HomePage from '@/pages/HomePage'
 import DashboardPage from '@/pages/DashboardPage'
 import DisastersPage from '@/pages/DisastersPage'
 import MedicalResourcesPage from '@/pages/MedicalResourcesPage'
+import SmartRoutingPage from '@/pages/SmartRoutingPage'
 import ChatbotPage from '@/pages/ChatbotPage'
 import ProfilePage from '@/pages/ProfilePage'
 import SignInPage from '@/pages/auth/SignInPage'
@@ -62,6 +63,7 @@ function App() {
                     <Route index element={<DashboardPage />} />
                     <Route path="disasters/*" element={<DisastersPage />} />
                     <Route path="medical-resources/*" element={<MedicalResourcesPage />} />
+                    <Route path="smart-routing" element={<SmartRoutingPage />} />
                     <Route path="chatbot" element={<ChatbotPage />} />
                     <Route path="profile" element={<ProfilePage />} />
                   </Routes>
