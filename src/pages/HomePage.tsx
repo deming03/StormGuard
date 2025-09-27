@@ -267,25 +267,6 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Stats Section */}
-      <section className="py-24">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid md:grid-cols-3 gap-8 text-center">
-            <div className="space-y-2">
-              <div className="text-4xl font-bold text-white">99.2%</div>
-              <div className="text-gray-300">Storm Prediction Accuracy</div>
-            </div>
-            <div className="space-y-2">
-              <div className="text-4xl font-bold text-white">15min</div>
-              <div className="text-gray-300">Average Early Warning Time</div>
-            </div>
-            <div className="space-y-2">
-              <div className="text-4xl font-bold text-white">50K+</div>
-              <div className="text-gray-300">Lives Protected Daily</div>
-            </div>
-          </div>
-        </div>
-      </section>
 
       {/* CTA Section */}
       <section className="py-24 bg-white/5 backdrop-blur-xl">
